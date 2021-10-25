@@ -1,0 +1,21 @@
+1. promethues如何通过metrics监控kube-proxy和etcd
+'''yaml
+    - job_name: 'kubernetes-kube-proxy'
+      scrape_interval: 5s
+      static_configs:
+      - targets: ['192.168.40.180:10249','192.168.40.181:10249']
+    - job_name: 'kubernetes-etcd'
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/k8s-certs/etcd/ca.crt
+        cert_file: /var/run/secrets/kubernetes.io/k8s-certs/etcd/server.crt
+        key_file: /var/run/secrets/kubernetes.io/k8s-certs/etcd/server.key
+      scrape_interval: 5s
+      static_configs:
+      - targets: ['192.168.40.180:2379']
+
+'''
+【答案】
+kubectl -n monitor create secret generic etcd-certs --from-file=/etc/kubernetes/pki/etcd/server.key --from-file=/etc/kubernetes/pki/etcd/server.crt --from-file=/etc/kubernetes/pki/etcd/ca.crt
+
+2. ExternalName类型的Service对外暴露服务，可以用IPv4地址吗？

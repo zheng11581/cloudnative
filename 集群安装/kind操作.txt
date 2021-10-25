@@ -1,0 +1,43 @@
+# 安装docker desktop
+Use the WSL 2 based engine
+
+# 关于docker和vm不兼容
+使用vm时：
+1. 关闭HPV
+2. 使用管理员powshell输入命令：bcdedit /set hypervisorlaunchtype off
+3. 重启
+
+使用docker时：
+1. 打开HPV（window功能中的Hyper -v 勾选）
+2. 使用管理员powshell输入命令：bcdedit /set hypervisorlaunchtype auto
+3. 重启
+
+# kind安装
+# Windows 10
+PS C:\Users\ThinkPad> set GO111MODULE="on" 
+PS C:\Users\ThinkPad> go get sigs.k8s.io/kind@v0.11.1
+
+# kind操作集群
+kind create cluster --name kind-2
+kubectl cluster-info --context kind-2
+kind delete cluster
+
+# kind导入本地docker镜像
+kind load docker-image busybox:1.34.0
+
+# kubectl用法和kubeadm一样
+
+# 注意
+1. don't use a :latest tag
+2. specify imagePullPolicy: IfNotPresent or imagePullPolicy: Never on your container(s)
+
+# 配置资源限制，修改后重启docker(即重启wsl)
+# 创建C:\Users\ThinkPad\.wslconfig文件
+[wsl2]
+memory=8GB
+processors=4
+swap=0
+localhostForwarding=true
+
+# 关闭window sub linux
+wsl --shutdown
