@@ -13,6 +13,7 @@ Use the WSL 2 based engine
 3. 重启
 
 # kind安装
+https://kind.sigs.k8s.io/docs/
 # Windows 10
 PS C:\Users\ThinkPad> set GO111MODULE="on" 
 PS C:\Users\ThinkPad> go get sigs.k8s.io/kind@v0.11.1
@@ -24,6 +25,7 @@ kind delete cluster
 
 # kind导入本地docker镜像
 kind load docker-image busybox:1.34.0
+kind load image-archive my-image-archive.tar
 
 # kubectl用法和kubeadm一样
 
@@ -41,3 +43,27 @@ localhostForwarding=true
 
 # 关闭window sub linux
 wsl --shutdown
+
+# 安装ingress controller
+1. 创建集群：启用extraPortMappings和node-labels
+cat <<EOF | kind create cluster --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+EOF
+2. 安装ingress controller
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
