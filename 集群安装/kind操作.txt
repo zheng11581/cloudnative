@@ -19,9 +19,15 @@ PS C:\Users\ThinkPad> set GO111MODULE="on"
 PS C:\Users\ThinkPad> go get sigs.k8s.io/kind@v0.11.1
 
 # kind操作集群
-kind create cluster --name kind-2
-kubectl cluster-info --context kind-2
+kind create cluster --name kind-kind
+kubectl cluster-info --context kind-kind
 kind delete cluster
+# 或者使用配置文件启动集群
+kind create cluster --config kind-example-config.yaml
+
+# 检查一下所有可用的上下文
+kubectl config get-contexts
+kubectl config set-context kind-kind
 
 # kind导入本地docker镜像
 kind load docker-image busybox:1.34.0
@@ -65,5 +71,9 @@ nodes:
     hostPort: 443
     protocol: TCP
 EOF
+
+或者使用配置文件启动集群
+kind create cluster --config kind-example-config.yaml
+
 2. 安装ingress controller
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
