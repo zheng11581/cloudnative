@@ -57,3 +57,8 @@ kubia-nodeport   NodePort    10.96.172.48   <none>        80:30080/TCP   20h
 PS C:\Users\ThinkPad>
 
 4. kind集群端口映射到主机，通过extraPortMappings，每次都需要delete cluster && create cluster?
+
+5. kubeadm kube-apiserver kube-controller-manager kube-scheduler meta pod总是重启?
+kube-controller-manager-kbadmmaster1       1/1     Running   653        15d
+kube-controller-manager-kbadmmaster2       1/1     Running   649        13h
+
