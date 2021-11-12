@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkinszh
+  namespace: devops
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: jenkinszh.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jenkinszh
+            port:
+              number: 8080
+        
+

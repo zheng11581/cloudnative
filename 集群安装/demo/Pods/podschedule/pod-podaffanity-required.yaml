@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-podaffanity-1
+  labels:
+    app: lym-web
+    tier: frontend
+spec:
+  containers:
+  - name: lym-web
+    image: ikubernetes/myapp:v1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-podaffanity-2
+  labels:
+    app: lym-python
+    tier: backend
+spec:
+  containers:
+  - name: busybox
+    image: busybox:latest
+    imagePullPolicy: IfNotPresent
+    command: ["sh","-c","sleep 3600"]
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - {key: app, operator: In, values: ["lym-web"]}
+        topologyKey: kubernetes.io/hostname

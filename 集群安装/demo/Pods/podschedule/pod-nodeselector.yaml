@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeselector-pod
+  namespace: default
+  labels:
+    app: myapp
+    env: dev
+spec:
+  nodeSelector: # 调度到kbadmnode2节点上
+    disk: ceph
+  containers:
+  - name: tomcat-pod-java
+    ports:
+    - containerPort: 8080
+    image: tomcat:8.5-jre8-alpine
+    imagePullPolicy: IfNotPresent

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tolerents-pod
+  namespace: default
+  labels:
+    app: myapp
+    release: canary
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/myapp:v1
+    ports:
+    - name: http
+      containerPort: 80
+  tolerations:
+  - key: "node-type"
+    operator: "Equal"
+    value: "prod"
+    effect: "NoSchedule"

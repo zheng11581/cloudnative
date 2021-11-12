@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport
+  namespace: default
+  labels:
+    app: nginx-nodeport
+spec:
+  type: NodePort
+  ports:
+  - name: nginx
+    nodePort: 30080
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx-nodeport

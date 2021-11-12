@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: systemd-sshd
+  namespace: default
+  labels:
+    app: sshd
+    init: systemd
+spec:
+  nodeName: kbadmnode1
+  containers:
+  - image: centos
+    imagePullPolicy: IfNotPresent
+    name: sshd
+    command: ["init", "3"]
+    #command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: cgroup
+      mountPath: "/sys/fs/cgroup"
+  volumes:
+  - name: cgroup
+    hostPath: 
+      path: "/sys/fs/cgroup"

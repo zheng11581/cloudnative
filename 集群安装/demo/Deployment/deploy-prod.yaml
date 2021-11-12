@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: portal
+  namespace: ms 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: ms
+      app: portal
+  template:
+    metadata:
+      labels:
+        project: ms 
+        app: portal
+    spec:
+      containers:
+      - name: portal
+        image:  xianchao/portal:v1
+        imagePullPolicy: Always
+        ports:
+        - protocol: TCP
+          containerPort: 8080 
+        resources:  #资源配额
+          limits:  #资源限制，最多可用的cpu和内存
+            cpu: 1000m
+            memory: 1Gi
+          requests： #最少需要多少资源才可以运行Pod, node要满足
+            cpu: 500m
+            memory: 1Gi
+        readinessProbe: #容器内应用就绪
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        livenessProbe: #Pod为存活状态
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10

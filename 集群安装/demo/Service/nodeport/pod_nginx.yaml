@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: nginx-nodeport
+  namespace: default
+  labels:
+    app: nginx-nodeport
+spec:
+  selector:
+    matchLabels:
+      app: nginx-nodeport
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx-nodeport
+    spec:
+      containers:
+      - name: nginx-nodeport
+        image: nginx:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80

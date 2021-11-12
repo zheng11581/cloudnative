@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-clusterip
+spec:
+  selector:
+    matchLabels:
+      run: nginx-clusterip
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: nginx-clusterip
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80  #pod中的容器需要暴露的端口
+

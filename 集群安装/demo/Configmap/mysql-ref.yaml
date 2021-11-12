@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-ref
+spec:
+  containers:
+  - name: mysql
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/sh", "-c", "sleep 3600" ]
+    envFrom: 
+    - configMapRef:
+       name: mysql     #指定configmap的名字
+  restartPolicy: Never
+

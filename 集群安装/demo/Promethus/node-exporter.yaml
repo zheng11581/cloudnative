@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: DaemonSet # 可以保证k8s集群的每个节点都运行完全一样的pod
+metadata:
+  name: node-exporter
+  namespace: monitor
+  labels:
+    name: node-exporter
+spec:
+  selector:
+    matchLabels:
+      name: node-exporter
+  template:
+    metadata:
+      labels:
+        name: node-exporter
+    spec:
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true # hostNetwork 、 hostIPC 、D hostPID 都为True时，表示这个Pod里的所有容器，会直接使用宿主机的网络，直接与宿主机进行 IPC （进程间通信） 通信， 可以看到宿主机里正在运行的所有进程。加入了hostNetwork:true 会直接将我们的宿主机的9100端口映射出来，从而不需要创建 service 在我们的宿主机上就会有一个9100的端口
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter:v0.16.0
+        ports:
+        - containerPort: 9100
+        resources:
+          requests:
+            cpu: 0.15 # 这个容器运行至少需要0.15核cpu
+        securityContext:
+          privileged: true # 开启特权模式
+        args:
+        - --path.procfs # 配置挂载宿主机（node节点）的路径
+        - /host/proc
+        - --path.sysfs # 配置挂载宿主机（node节点）的路径
+        - /host/sys
+        - --collector.filesystem.ignored-mount-points
+        - '"^/(sys|proc|dev|host|etc)($|/)"' # 通过正则表达式忽略某些文件系统挂载点的信息收集
+        volumeMounts:
+        - name: dev
+          mountPath: /host/dev
+        - name: proc
+          mountPath: /host/proc
+        - name: sys
+          mountPath: /host/sys
+        - name: rootfs
+          mountPath: /rootfs # 将主机/dev 、/proc 、/sys 这些目录挂在到容器中，这是因为我们采集的很多节点数据都是通过这些文件来获取系统信息的。
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: dev
+          hostPath:
+            path: /dev
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: rootfs
+          hostPath:
+            path: /

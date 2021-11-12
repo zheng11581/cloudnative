@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: nginx
+  labels:
+     app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector: 
+    matchLabels:
+      app: nginx
+  serviceName: nginx
+  template:
+    metadata:
+      name: nginx
+      namespace: default
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: front
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports: 
+        - name: web
+          containerPort: 80
+        livenessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          tcpSocket: 
+            port: 80
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5         
+          tcpSocket:
+            port: 80
+        volumeMounts:
+        - name: web-pvc
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - apiVersion: apps/v1
+    kind: volumeClaimTemplates
+    metadata:
+      name: web-pvc
+      namespace: default
+      labels:
+        app: nginx
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      - ReadWriteMany
+      storageClassName: nfs-web
+      resources: 
+        limits:
+          storage: 200Mi
+        requests:
+          storage: 100Mi
+      

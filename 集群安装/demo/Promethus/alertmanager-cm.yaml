@@ -1,0 +1,29 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager
+  namespace: monitor
+data:
+  alertmanager.yml: |-
+    global:
+      resolve_timeout: 1m
+      smtp_smarthost: 'smtp.qq.com:25'
+      smtp_from: '840126718@qq.com'
+      smtp_auth_username: '840126718@qq.com'
+      smtp_auth_password: 'hjsigjvlfaszbcji22'
+      smtp_require_tls: false
+    route:
+      group_by: [alertname]
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 10m
+      receiver: cluster1
+    receivers:
+    - name: 'default-receiver'
+      email_configs:
+      - to: 'zhenghc@gih.cn'
+        send_resolved: true
+    - name: cluster1
+      webhook_configs:
+      - url: 'http://192.168.110.23:8060/dingtalk/cluster1/send'
+        send_resolved: true

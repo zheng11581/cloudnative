@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-volume
+spec:
+  containers:
+  - name: mysql
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/sh","-c","sleep 3600" ]
+    volumeMounts:
+    - name: mysql-config
+      mountPath: /etc/my.cnf.d
+  volumes:
+  - name: mysql-config
+    configMap:
+      name: mysql
+  restartPolicy: Never
+

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mem-cpu-quota
+  namespace: test-namespace
+spec:
+  hard:
+    requests.cpu: 0.5
+    requests.memory: 512Mi
+    limits.cpu: 5
+    limits.memory: 8Gi

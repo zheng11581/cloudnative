@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tomcat
+  namespace: default
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    -  tomcat.example.com
+    secretName: tomcat-tls-secret
+  rules:
+  - host: tomcat.example.com
+    http:
+      paths:
+      - path: /
+        pathType:  Prefix
+        backend:
+         service:
+           name: tomcat
+           port:
+            number: 8080
+

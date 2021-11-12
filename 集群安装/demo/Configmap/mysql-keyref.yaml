@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-keyref
+spec:
+  containers:
+  - name: mysql
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/sh", "-c", "sleep 3600" ]
+    env:
+    - name: MYSQL_MASTER_CONF # 定义环境变量MYSQL_MASTER_CONF
+      valueFrom: 
+        configMapKeyRef:
+          name: mysql # 指定configmap的名字
+          key: master.cnf # 指定configmap中的key
+    - name: SLAVE_MASTER_CONF # 定义环境变量SLAVE_MASTER_CONF
+      valueFrom:
+        configMapKeyRef:
+          name: mysql
+          key: slave.cnf
+  restartPolicy: Never
+

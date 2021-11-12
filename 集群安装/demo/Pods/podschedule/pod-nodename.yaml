@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-pod
+  namespace: default
+  labels:
+    app: myapp
+    env: dev
+spec:
+  nodeName: kbadmnode1 # 调度到kbadmnode1节点上
+  containers:
+  - name: tomcat-pod-java
+    ports:
+    - containerPort: 8080
+    image: tomcat:8.5-jre8-alpine
+    imagePullPolicy: IfNotPresent
+  - name: busybox
+    image: busybox:latest
+    command:
+    - "/bin/sh"
+    - "-c"
+    - "sleep 3600"

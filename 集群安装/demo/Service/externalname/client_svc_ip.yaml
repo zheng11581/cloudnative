@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: client-svc-ip
+spec: 
+  type: ExternalName
+  externalName: 192.168.100.13
+  ports:
+  - name: oracle
+    port: 1521
+    targetPort: 1521
+

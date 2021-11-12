@@ -1,0 +1,11 @@
+You can now join any number of control-plane nodes by copying certificate authorities
+and service account keys on each node and then running the following as root:
+
+  kubeadm join 192.168.110.29:16443 --token qkvhdz.8imchzikt5tgjesq \
+    --discovery-token-ca-cert-hash sha256:3e1aeb3def270c7e61c94dad403a018e1a447266a323c083bb083fd1cb461441 \
+    --control-plane 
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 192.168.110.29:16443 --token qkvhdz.8imchzikt5tgjesq \
+    --discovery-token-ca-cert-hash sha256:3e1aeb3def270c7e61c94dad403a018e1a447266a323c083bb083fd1cb461441 
