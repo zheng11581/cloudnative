@@ -2,6 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: nfs-provisioner
+  namespace: production
 spec:
   selector:
     matchLabels:
@@ -17,7 +18,7 @@ spec:
       serviceAccount: nfs-provisioner
       containers:
         - name: nfs-provisioner
-          image: registry.cn-beijing.aliyuncs.com/mydlq/nfs-subdir-external-provisioner:v4.0.0
+          image: zheng11581/nfs-provisioner:v4.0.0
           volumeMounts:
             - name: nfs-provisioner
               mountPath: /persistentvolumes
