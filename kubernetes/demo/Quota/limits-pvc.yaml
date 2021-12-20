@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: pvc-limits
+  namespace: production
+spec:
+  limits:
+  - type: PersistentVolumeClaim #指定Pod请求PVC的最小值和最大值 
+    min:
+      storage: 1Gi
+    max:
+      storage: 10Gi
