@@ -33,7 +33,6 @@ func Marshal2String(obj interface{}) string {
 	if err != nil {
 		fmt.Println(err)
 	}
-	log.Println(string(objBytes))
 	return string(objBytes)
 }
 
@@ -62,5 +61,4 @@ func main() {
 		obj := Unmarshal2Struct(objString)
 		fmt.Println(obj)
 	}
-
 }
