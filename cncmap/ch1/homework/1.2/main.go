@@ -16,9 +16,7 @@ func producer(ch chan<- int) {
 	ticker := time.NewTicker(time.Second)
 	for i := 0; i < 10; i++ {
 		<-ticker.C
-		select {
-		case ch <- i:
-		}
+		ch <- i
 	}
 	defer ticker.Stop()
 	defer close(ch)
