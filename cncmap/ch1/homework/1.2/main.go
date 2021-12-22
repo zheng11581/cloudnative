@@ -7,19 +7,24 @@ import (
 
 func main() {
 	ch := make(chan int, 10)
+	go producer(ch)
+	consumer(ch)
 
-	go func() {
-		ticker := time.NewTicker(time.Second)
-		for i := 0; i < 10; i++ {
-			<-ticker.C
-			select {
-			case ch <- i:
-			}
+}
+
+func producer(ch chan<- int) {
+	ticker := time.NewTicker(time.Second)
+	for i := 0; i < 10; i++ {
+		<-ticker.C
+		select {
+		case ch <- i:
 		}
-		defer close(ch)
-		defer ticker.Stop()
-	}()
+	}
+	defer ticker.Stop()
+	defer close(ch)
+}
 
+func consumer(ch <-chan int) {
 	for item := range ch {
 		fmt.Printf("recived %d\n", item)
 	}
