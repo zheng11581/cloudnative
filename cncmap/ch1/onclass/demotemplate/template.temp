@@ -1,0 +1,29 @@
+<source>
+  @type tail
+  path {{.Path}} # 要收集的日志文件路径
+  pos_file {{.Path}}.pos
+  tag {{.Tag}} # 标签
+  # 分析提取日志信息,最终的正则表达式以日志的字段为准。
+  <parse>
+    @type regexp
+    expression /^\[(?<logtime>[^\]]*)\]\s+\[(?<logtype>[^ ]*)\]\s+(?<loglevel>[^ ]*)\s+(?<logcontent>sysLog\s+.*)/
+    # time_key logtime
+    time_format %Y-%m-%d %H:%M:%s
+  </parse>
+</source>
+
+<match {{.Tag}}>
+  @type copy
+  <store>
+    # debug模式 (tail -f /var/log/td-agent/td-agent.log)可以查看日志收集情况
+    @type stdout
+  </store>
+  <store>
+    @type elasticsearch # 使用的数据存储的插件
+    host es.example.com # es服务器地址
+    port 31114      # es端口
+    logstash_format false
+    flush_interval 10
+    index_name {{.Name}}
+  </store>
+</match>
