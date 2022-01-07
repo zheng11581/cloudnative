@@ -11,12 +11,13 @@ import (
 )
 
 func main() {
-	flag.Set("v", "4")
+	//flag.Set("v", "4")
 	flag.Parse()
-	glog.V(4).Info("Starting http server...")
+	glog.V(2).Info("Starting http server...")
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/healthy", healthyHandler)
 	http.HandleFunc("/header", headerHandler)
+	http.HandleFunc("/logging", loggingHandler)
 	err := http.ListenAndServe(":80", nil)
 	if err != nil {
 		log.Fatal(err)
@@ -24,6 +25,7 @@ func main() {
 }
 
 func healthyHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Entering healthy handler...")
 	io.WriteString(w, "ok\n")
 }
 
@@ -58,4 +60,11 @@ func headerHandler(w http.ResponseWriter, r *http.Request) {
 	for k, v := range resHeader {
 		io.WriteString(w, fmt.Sprintf("%s=%s\n", k, v))
 	}
+}
+
+func loggingHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Entering logging handler...")
+	fmt.Println("未完成")
+	io.WriteString(w, "ok")
+
 }

@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"encoding/json"
@@ -8,15 +8,7 @@ import (
 	"regexp"
 )
 
-func main() {
-	indexes := GetIndex()
-	for _, index := range indexes {
-		DeleteIndex(index)
-	}
-}
-
 func DeleteIndex(index map[string]string) {
-	fmt.Printf("%v\n", index["index"])
 	req, err := http.NewRequest(http.MethodDelete, "http://es.example.com:31114/"+index["index"], nil)
 	if err != nil {
 		panic(err)
@@ -27,7 +19,7 @@ func DeleteIndex(index map[string]string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Deleting index %s, result is %s", index["index"], string(result))
+	fmt.Printf("Deleting index %s, result is %s\n", index["index"], string(result))
 }
 
 func GetIndex() []map[string]string {
