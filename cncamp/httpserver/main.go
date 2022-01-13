@@ -16,11 +16,12 @@ func main() {
 	//flag.Set("v", "4")
 	flag.Parse()
 	glog.V(2).Info("Starting http server...")
-	http.HandleFunc("/", index)
-	http.HandleFunc("/healthy", healthz)
+	http.HandleFunc("/healthz", healthz)
 	http.HandleFunc("/header", header)
 	http.HandleFunc("/logging", logging)
-	err := http.ListenAndServe(":80", nil)
+	http.HandleFunc("/", index)
+	mux := http.NewServeMux()
+	err := http.ListenAndServe(":80", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,6 +62,7 @@ func header(w http.ResponseWriter, r *http.Request) {
 
 func logging(w http.ResponseWriter, r *http.Request) {
 	ip := ClientIP(r)
+	io.WriteString(w, fmt.Sprintf("IP is: %s", ip))
 	glog.V(2).Infof("IP is: %s", ip)
 
 }
