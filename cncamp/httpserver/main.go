@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/golang/glog"
 	"io"
@@ -14,8 +13,8 @@ import (
 
 func main() {
 	//flag.Set("v", "4")
-	flag.Parse()
-	glog.V(2).Info("Starting http server...")
+	////flag.Parse()
+	//glog.V(2).Info("Starting http server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthz)
 	mux.HandleFunc("/header", header)
@@ -28,7 +27,8 @@ func main() {
 }
 
 func healthz(w http.ResponseWriter, r *http.Request) {
-	glog.V(2).Infof("The /healthz return: ")
+	fmt.Println("Entering healthz handler...")
+	//glog.V(2).Infof("The /healthz return: ")
 	io.WriteString(w, "ok\n")
 }
 
@@ -49,6 +49,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func header(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Entering header handler...")
 	os.Setenv("VERSION", "1.0.0")
 	version := os.Getenv("VERSION")
 	w.Header().Set("VERSION", version)
@@ -61,6 +62,7 @@ func header(w http.ResponseWriter, r *http.Request) {
 }
 
 func logging(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Entering logging handler...")
 	ip := ClientIP(r)
 	io.WriteString(w, fmt.Sprintf("IP is: %s", ip))
 	glog.V(2).Infof("IP is: %s", ip)
