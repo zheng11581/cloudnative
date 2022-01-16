@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/golang/glog"
 	"io"
@@ -13,9 +12,10 @@ import (
 )
 
 func main() {
-	flag.Set("v", "4")
-	flag.Parse()
-	glog.V(2).Info("Starting http server...")
+	//flag.Set("v", "4")
+	//flag.Parse()
+	//glog.V(2).Info("Starting http server...")
+	//glog.Flush()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthz)
 	mux.HandleFunc("/header", header)
@@ -29,7 +29,7 @@ func main() {
 
 func healthz(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Entering healthz handler...")
-	//glog.V(2).Infof("The /healthz return: ")
+	defer glog.Flush()
 	io.WriteString(w, "ok\n")
 }
 
