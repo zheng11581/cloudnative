@@ -15,6 +15,7 @@ func main() {
 	//flag.Parse()
 	//glog.V(2).Info("Starting http server...")
 	//glog.Flush()
+	log.Println("Starting http server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthz)
 	mux.HandleFunc("/header", header)
@@ -27,12 +28,12 @@ func main() {
 }
 
 func healthz(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Entering healthz handler...")
+	log.Println("Entering healthz handler...")
 	io.WriteString(w, "ok\n")
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Entering root handler...")
+	log.Println("Entering root handler...")
 	user := r.URL.Query().Get("user")
 	if user != "" {
 		io.WriteString(w, fmt.Sprintf("Hello, [%s]\n", user))
@@ -48,11 +49,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func header(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Entering header handler...")
+	log.Println("Entering header handler...")
 	os.Setenv("VERSION", "1.0.0")
 	version := os.Getenv("VERSION")
 	w.Header().Set("VERSION", version)
-	//glog.V(2).Infof("VERSION is %s", version)
+	log.Printf("VERSION is %s", version)
 	for k, v := range r.Header {
 		for _, vv := range v {
 			w.Header().Set(k, vv)
@@ -61,10 +62,10 @@ func header(w http.ResponseWriter, r *http.Request) {
 }
 
 func logging(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Entering logging handler...")
+	log.Println("Entering logging handler...")
 	ip := ClientIP(r)
 	io.WriteString(w, fmt.Sprintf("IP is: %s", ip))
-	//glog.V(2).Infof("IP is: %s", ip)
+	log.Printf("IP is: %s", ip)
 
 }
 

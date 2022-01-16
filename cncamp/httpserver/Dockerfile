@@ -5,7 +5,7 @@ ENV GO111MODULE=off \
     GOARCH=amd64
 WORKDIR /build
 COPY . .
-RUN go build -o httpserver .
+RUN make build
 
 FROM alpine:3.15
 COPY --from=build /build/httpserver /httpserver
