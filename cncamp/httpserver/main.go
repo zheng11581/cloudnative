@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/golang/glog"
 	"io"
 	"log"
 	"net"
@@ -29,7 +28,6 @@ func main() {
 
 func healthz(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Entering healthz handler...")
-	defer glog.Flush()
 	io.WriteString(w, "ok\n")
 }
 
@@ -54,7 +52,7 @@ func header(w http.ResponseWriter, r *http.Request) {
 	os.Setenv("VERSION", "1.0.0")
 	version := os.Getenv("VERSION")
 	w.Header().Set("VERSION", version)
-	glog.V(2).Infof("VERSION is %s", version)
+	//glog.V(2).Infof("VERSION is %s", version)
 	for k, v := range r.Header {
 		for _, vv := range v {
 			w.Header().Set(k, vv)
@@ -66,7 +64,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Entering logging handler...")
 	ip := ClientIP(r)
 	io.WriteString(w, fmt.Sprintf("IP is: %s", ip))
-	glog.V(2).Infof("IP is: %s", ip)
+	//glog.V(2).Infof("IP is: %s", ip)
 
 }
 
