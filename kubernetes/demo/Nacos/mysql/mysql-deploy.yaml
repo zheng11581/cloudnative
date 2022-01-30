@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: mysql
+      app: mysql
+  template:
+    metadata:
+      labels:
+        service: mysql
+        app: mysql
+    spec:
+      containers:
+      #nacos-mysql
+      - image: nacos/nacos-mysql:5.7
+        imagePullPolicy: IfNotPresent
+        name: nacos-mysql
+        env:
+        - name: MYSQL_USER
+          value: "root"
+        - name: MYSQL_DATABASE
+          value: "nacos"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "nacos123"
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-pv
+          subPath: mysql
+        ports:
+        - containerPort: 3306
+          name: "mysql-port"
+      volumes:
+      - name: mysql-pv
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    name: mysql
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+      name: "nacos-mysql-port"
+  selector:
+    app: mysql

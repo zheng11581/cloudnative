@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nacos-deployment
-  namespace: devops
+  name: nacos
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -16,24 +16,6 @@ spec:
         app: nacos
     spec:
       containers:
-      #nacos-mysql
-      - image: nacos/nacos-mysql:5.7
-        imagePullPolicy: IfNotPresent
-        name: nacos-mysql
-        env:
-        - name: MYSQL_USER
-          value: "root"
-        - name: MYSQL_DATABASE
-          value: "nacos"
-        - name: MYSQL_ROOT_PASSWORD
-          value: "nacos123"
-        volumeMounts:
-        - mountPath: /var/lib/mysql
-          name: nacos-pv
-          subPath: mysql
-        ports:
-        - containerPort: 3306
-          name: "mysql-port"
       #nacos
       - image: nacos/nacos-server:latest
         imagePullPolicy: IfNotPresent
@@ -68,9 +50,10 @@ spec:
         - mountPath: /etc/localtime
           name: nacos-time
         startupProbe:
-          initialDelaySeconds: 10
+          initialDelaySeconds: 15
           periodSeconds: 10
           tcpSocket:
+            host: mysql
             port: 3306
       volumes:
       - name: nacos-pv
@@ -82,3 +65,16 @@ spec:
       - name: nacos-time
         hostPath:
           path: /etc/localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos
+  namespace: default
+spec:
+  ports:
+    - port: 8848
+      targetPort: 8848
+      name: "nacos-port"
+  selector:
+    app: nacos
