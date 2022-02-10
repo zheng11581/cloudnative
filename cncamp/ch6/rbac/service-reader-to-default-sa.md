@@ -7,7 +7,7 @@ k run test --image=luksa/kubectl-proxy -n qa
 ```
 Note: kubectl proxy expose 8001 port for pod connecting to api-server
 
-### Try to <list> services from pod qa/test
+### Try to list services from pod qa/test
 ```shell
 k exec -it test -n qa -- sh
 / # curl localhost:8001/api/v1/namespaces/qa/services
@@ -33,7 +33,7 @@ k create role service-reader --verb=get,list,watch --resource=services --namespa
 k create rolebinding test --role=service-reader --serviceaccount=qa:default --namespace=qa
 ```
 
-### Try to <list> services from pod qa/test again
+### Try to list services from pod qa/test again
 ```shell
 k exec -it test -n qa -- sh
 / # curl localhost:8001/api/v1/namespaces/qa/services
@@ -48,7 +48,7 @@ k exec -it test -n qa -- sh
 ```
 The pod qa/test can list services in the qa namespace
 
-### Try to <list> other pods from pod qa/test
+### Try to list other pods from pod qa/test
 ```shell
 / # curl localhost:8001/api/v1/namespaces/qa/pods
 {
@@ -66,7 +66,7 @@ The pod qa/test can list services in the qa namespace
 ```
 The pod qa/test can't list pods in the qa namespace
 
-### Try to <list> services from prod namespace in pod qa/test
+### Try to list services from prod namespace in pod qa/test
 ```shell
 / # curl localhost:8001/api/v1/namespaces/prod/services
 {
@@ -90,7 +90,7 @@ k create role service-reader --verb=get,list,watch --resource=services --namespa
 k create rolebinding test --role=service-reader --serviceaccount=qa:default --serviceaccount=prod:default --namespace=prod
 ```
 
-### Try to <list> services from prod namespace in pod qa/test
+### Try to list services from prod namespace in pod qa/test
 ```shell
 / # curl localhost:8001/api/v1/namespaces/prod/services
 {
