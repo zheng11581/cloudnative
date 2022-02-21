@@ -1,0 +1,42 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: httpserver
+  name: httpserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: httpserver
+  template:
+    metadata:
+      labels:
+        run: httpserver
+    spec:
+      containers:
+        - image: zheng11581/httpserver:2.0
+          name: httpserver
+          env:
+            name: VERSION
+            valueFrom:
+              configMapKeyRef:
+                version
+          startupProbe:
+            httpGet:
+              http://localhost:8080/healthz
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              http://localhost:8080/healthz
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              http://localhost:8080/healthz
+            periodSeconds: 5
+            timeoutSeconds: 5
+

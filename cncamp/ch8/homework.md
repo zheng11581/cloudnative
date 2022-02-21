@@ -23,6 +23,11 @@ macbookpro:httpserver zhenghc$ go run main.go
 Process finished with the exit code 0
 ```
 
+#### 2. Graceful start
+[Add probe](../httpserver/deploy/httpserver-deploy.yaml)
+
+#### 3. Graceful stop
+[Use Tiny](../httpserver/Dockerfile)
 
 
 

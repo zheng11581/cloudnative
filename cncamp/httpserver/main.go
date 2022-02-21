@@ -79,7 +79,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func header(w http.ResponseWriter, r *http.Request) {
 	log.Println("Entering header handler...")
-	os.Setenv("VERSION", "1.0.0")
 	version := os.Getenv("VERSION")
 	w.Header().Set("VERSION", version)
 	log.Printf("VERSION is %s", version)
