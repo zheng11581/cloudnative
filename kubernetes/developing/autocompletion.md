@@ -27,8 +27,8 @@ echo 'complete -F __start_kubectl k' >>~/.bashrc
 
 #### bash auto-completion on macOS
 ```shell
-bash_complation@v1 --> bash@3.2
-bash_completion@v2 --> bash@4.1+
+bash_complation@1 --> bash@3.2
+bash_completion@2 --> bash@4.1+
 ```
 
 ##### Upgrade Bash

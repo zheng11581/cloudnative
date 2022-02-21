@@ -19,7 +19,7 @@ for i in `kubectl api-resources | grep true | awk '{print \$1}'`; do echo $i;kub
 
 ```sh
 git clone --single-branch --branch master https://github.com/rook/rook.git
-cd rook/cluster/examples/kubernetes/ceph
+cd rook/deploy/examples
 ```
 
 ### Create rook operator
