@@ -7,32 +7,61 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+	"time"
 )
 
+//func init()  {
+//	flag.Set("v", "4")
+//	flag.Parse()
+//}
+
 func main() {
-	//flag.Set("v", "4")
-	//flag.Parse()
 	//glog.V(2).Info("Starting http server...")
-	//glog.Flush()
+	//defer glog.Flush()
+
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	log.Println("Starting http server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthz)
 	mux.HandleFunc("/header", header)
 	mux.HandleFunc("/logging", logging)
 	mux.HandleFunc("/", index)
-	err := http.ListenAndServe(":80", mux)
-	if err != nil {
-		log.Fatal(err)
+
+	go func() {
+		err := http.ListenAndServe(":8080", mux)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	for sig := range c {
+		switch sig {
+		case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
+			log.Print("Waiting 5 seconds for grace shutdown...")
+			time.Sleep(time.Second * 5)
+			ShutDown()
+		}
 	}
 }
 
+func ShutDown() {
+	log.Print("Starting quit...")
+	os.Exit(0)
+}
+
 func healthz(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering healthz handler...")
+	log.Print("Entering healthz handler...")
 	io.WriteString(w, "ok\n")
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
+	if r.URL.RequestURI() == "/favicon.ico" {
+		return
+	}
 	log.Println("Entering root handler...")
 	user := r.URL.Query().Get("user")
 	if user != "" {
