@@ -28,6 +28,10 @@ Process finished with the exit code 0
 
 #### 3. Graceful stop
 [Use Tiny](../httpserver/Dockerfile)
+[Use Chanel](../httpserver/main.go)
 
+#### 4. Resource requests and limits (QOS)
+[User resources.requests and limits](../httpserver/deploy/httpserver-deploy.yaml)
 
-
+#### 5. Configuration Map
+[User ConfigMap](../httpserver/deploy/httpserver-cm.yaml)

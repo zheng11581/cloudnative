@@ -5,7 +5,7 @@ ENV GO111MODULE=off \
     GOARCH=amd64
 WORKDIR /build
 COPY . .
-RUN make build
+RUN go build -o httpserver
 
 FROM alpine:3.15
 COPY --from=build /build/httpserver /httpserver
@@ -16,5 +16,5 @@ RUN apk add --no-cache tini
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Run your program under Tini
-CMD ["/httpserver"]
+ CMD ["/httpserver"]
 # ENTRYPOINT ["/httpserver"]

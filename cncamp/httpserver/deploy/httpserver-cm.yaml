@@ -3,6 +3,5 @@ kind: ConfigMap
 metadata:
   name: httpserver
   namespace: default
-  data:
-    envoy.yaml: |-
-      version: 2.0.0
+data:
+  version: v3.0

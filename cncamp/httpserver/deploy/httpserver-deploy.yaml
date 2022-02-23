@@ -1,4 +1,17 @@
-
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpserver
+  labels:
+    app: httpserver
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: "http"
+  selector:
+    run: httpserver
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,27 +29,39 @@ spec:
         run: httpserver
     spec:
       containers:
-        - image: zheng11581/httpserver:2.0
+        - image: zheng11581/httpserver:v3.0
           name: httpserver
           env:
-            name: VERSION
-            valueFrom:
-              configMapKeyRef:
-                version
+            - name: VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: version
+                  name: httpserver
           startupProbe:
             httpGet:
-              http://localhost:8080/healthz
+              port: 8080
+              path: /healthz
             initialDelaySeconds: 5
             periodSeconds: 5
-            timeoutSeconds: 5
+            timeoutSeconds: 1
           readinessProbe:
             httpGet:
-              http://localhost:8080/healthz
+              port: 8080
+              path: /healthz
             periodSeconds: 5
-            timeoutSeconds: 5
+            timeoutSeconds: 1
           livenessProbe:
             httpGet:
-              http://localhost:8080/healthz
+              port: 8080
+              path: /healthz
             periodSeconds: 5
-            timeoutSeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: 200m
+            requests:
+              memory: 128Mi
+              cpu: 100m
+      # qosClass: burstable
 
