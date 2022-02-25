@@ -28,8 +28,8 @@ spec:
       labels:
         run: httpserver
     spec:
-      readinessGates:
-        - conditionType: "www.example.com/feature-1"
+#      readinessGates:
+#        - conditionType: "www.example.com/feature-1"
       containers:
         - image: zheng11581/httpserver:v3.0
           name: httpserver
