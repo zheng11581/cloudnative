@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodelocal
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: nginx
+  # 1.23已经没有这个字段了
+  topologyKeys:
+    - "kubernetes.io/hostname"
+
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: prefer-nodelocal
+#spec:
+#  ports:
+#    - port: 80
+#      protocol: TCP
+#      name: http
+#  selector:
+#    app: nginx
+#  topologyKeys:
+#    - "kubernetes.io/hostname"
+#    - "topology.kubernetes.io/zone"
+#    - "topology.kubernetes.io/region"
+#    - "*"
+
+#  kubectl label node topology.kubernetes.io/zone=sh-01
+#  kubectl label node topology.kubernetes.io/region=sh
+#  kubectl label node kubernetes.io/hostname=node1

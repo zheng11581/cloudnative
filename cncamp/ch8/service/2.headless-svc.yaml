@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-headless
+spec:
+  # 无法为service配置VIP，因此在匹配DNS时只能为svc的配个pod分配A记录：podname.svcname.namspace.clusterdomain
+  clusterIP: None
+  ports:
+    - port: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: nginx
