@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: knowledgecloud
+  labels:
+    app: knowledgecloud
+spec:
+  ports:
+    - port: 9196
+      targetPort: 9196
+      name: "http"
+  selector:
+    run: knowledgecloud
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: knowledgecloud
+  name: knowledgecloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: knowledgecloud
+  template:
+    metadata:
+      labels:
+        run: knowledgecloud
+    spec:
+      imagePullSecrets:
+        - name: harbor-registry-secret
+      containers:
+        - image: 192.168.110.72/gene/knowledgecloud:v1.0
+          name: knowledgecloud
+          env:
+            - name: spring.cloud.nacos.discovery.server-addr
+              value: "http://nacos-0.nacos-headless:8848"
+            - name: spring.cloud.nacos.config.server-addr
+              value: "http://nacos-0.nacos-headless:8848"
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 200m
+            requests:
+              memory: 512Mi
+              cpu: 100m
+      # qosClass: burstable
+

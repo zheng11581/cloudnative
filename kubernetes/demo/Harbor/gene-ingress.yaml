@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: gene.example.com
+      http:
+        paths:
+          - path: /userManage
+            pathType: Prefix
+            backend:
+              service:
+                name: usermangage
+                port:
+                  number: 9193
+          - path: /knowledgeCloud
+            pathType: Prefix
+            backend:
+              service:
+                name: knowledgecloud
+                port:
+                  number: 9196
+          - path: /knowlege
+            pathType: Prefix
+            backend:
+              service:
+                name: usermangage
+                port:
+                  number: 9196
+
+          - path: /geneCloud
+            pathType: Prefix
+            backend:
+              service:
+                name: genecloud
+                port:
+                  number: 9190

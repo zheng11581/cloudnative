@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-external
+  labels:
+    name: redis-external
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: "redis-external-port"

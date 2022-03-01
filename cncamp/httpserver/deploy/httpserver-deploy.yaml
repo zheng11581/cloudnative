@@ -30,8 +30,11 @@ spec:
     spec:
 #      readinessGates:
 #        - conditionType: "www.example.com/feature-1"
+      imagePullSecrets:
+        - name: harbor-registry-secret
       containers:
-        - image: zheng11581/httpserver:v3.0
+#        - image: zheng11581/httpserver:v3.0
+        - image: 192.168.110.72/gene/httpserver:v3.0
           name: httpserver
           env:
             - name: VERSION

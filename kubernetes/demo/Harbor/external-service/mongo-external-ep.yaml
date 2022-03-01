@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: mongo-external
+subsets:
+  - addresses:
+      - ip: 192.168.110.125
+    ports:
+      - name: "mongo-external-port"
+        port: 27017
+        protocol: TCP

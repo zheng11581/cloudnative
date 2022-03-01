@@ -147,3 +147,4 @@ spec:
   selector:
     matchLabels:
       app: nacos
+
