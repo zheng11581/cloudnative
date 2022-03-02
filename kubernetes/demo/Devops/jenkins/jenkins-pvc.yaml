@@ -4,7 +4,7 @@ metadata:
   name: jenkins
   namespace: devops
 spec:
-  storageClassName: jenkins-nfs
+  storageClassName: nfs
   resources:
     requests:
       storage: 10Gi
