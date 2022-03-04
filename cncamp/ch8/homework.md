@@ -37,3 +37,11 @@ Process finished with the exit code 0
 
 #### 5. Configuration Map
 [User ConfigMap](../httpserver/deploy/httpserver-cm.yaml)
+
+### 第二部分
+
+#### 1. Service
+[Use Service](../httpserver/deploy/httpserver-deploy.yaml)
+
+#### 2. Ingress
+[Use Ingress](../httpserver/deploy/httpserver-ingress.yaml)

@@ -1,7 +1,7 @@
 ### Install ingress controller
 
 ```sh
-kubectl create -f nginx-ingress-deployment.yaml
+kubectl create -f nginx-ingress-deploy.yaml
 ```
 
 ### Generate key-cert
