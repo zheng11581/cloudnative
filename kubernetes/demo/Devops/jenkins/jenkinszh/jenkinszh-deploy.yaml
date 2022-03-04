@@ -17,7 +17,8 @@ spec:
       containers:
       - name: jenkinszh
         # image:  xianchao/jenkins:v1
-        image: jenkinszh/jenkins-k8s:2.204.5
+        # image: jenkinszh/jenkins-k8s:2.204.5
+        image: bitnami/jenkins:2.319.3
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -31,8 +32,8 @@ spec:
             cpu: 1000m
             memory: 1Gi
           requests:
-            cpu: 500m
-            memory: 512Mi
+            cpu: 1000m
+            memory: 1Gi
         livenessProbe:
           httpGet:
             path: /login
