@@ -10,4 +10,17 @@ spec:
       storage: 10Gi
   accessModes:
   - ReadWriteMany
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: maven-pvc
+  namespace: devops
+spec:
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 20Gi
+  accessModes:
+    - ReadWriteMany
 
