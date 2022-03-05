@@ -22,14 +22,6 @@ spec:
                 name: knowledgecloud
                 port:
                   number: 9196
-          - path: /knowlege
-            pathType: Prefix
-            backend:
-              service:
-                name: usermangage
-                port:
-                  number: 9196
-
           - path: /geneCloud
             pathType: Prefix
             backend:
