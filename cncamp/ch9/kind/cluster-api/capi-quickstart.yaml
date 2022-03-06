@@ -65,7 +65,7 @@ spec:
       name: capi-quickstart-control-plane
       namespace: default
   replicas: 1
-  version: v1.23.1
+  version: v1.23.3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
@@ -126,4 +126,4 @@ spec:
         kind: DockerMachineTemplate
         name: capi-quickstart-md-0
         namespace: default
-      version: v1.23.1
+      version: v1.23.3

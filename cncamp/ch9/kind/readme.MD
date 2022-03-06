@@ -25,6 +25,9 @@ cd cluster-api
 ### replace image repository
 ```shell
 vim capi-quickstart.yaml
+...
+imageRepository: registry.aliyuncs.com/google_container
+...
 ```
 
 ### apply cluster spec
