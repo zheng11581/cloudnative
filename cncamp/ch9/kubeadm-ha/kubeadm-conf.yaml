@@ -1,0 +1,65 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+clusterName: "kubernetes"
+kubernetesVersion: "v1.23.4"
+controlPlaneEndpoint: "master.cncamp.io"
+certificatesDir: "/etc/kubernetes/pki"
+imageRepository: "registry.aliyuncs.com/google_containers"
+etcd:
+  # one of local or external
+  local:
+    dataDir: "/var/lib/etcd"
+    serverCertSANs:
+      - "127.0.0.1"
+      - "10.95.102.110" # vip
+      - "10.95.102.111" # master1
+      - "10.95.102.112" # master2
+      - "10.95.102.113" # master3
+      - "localhost"
+      - "cn-master1"
+      - "cn-master2"
+      - "cn-master3"
+      - "master.cncamp.io"
+    peerCertSANs:
+      - "127.0.0.1"
+      - "10.95.102.110" # vip
+      - "10.95.102.111" # master1
+      - "10.95.102.112" # master2
+      - "10.95.102.113" # master3
+      - "localhost"
+      - "cn-master1"
+      - "cn-master2"
+      - "cn-master3"
+      - "master.cncamp.io"
+networking:
+  podSubnet: "10.244.0.0/16"
+  dnsDomain: "cluster.local"
+apiServer:
+  extraArgs:
+    authorization-mode: "Node,RBAC"
+  certSANs:
+    - "127.0.0.1"
+    - "10.95.102.110" # vip
+    - "10.95.102.111" # master1
+    - "10.95.102.112" # master2
+    - "10.95.102.113" # master3
+    - "localhost"
+    - "cn-master1"
+    - "cn-master2"
+    - "cn-master3"
+    - "master.cncamp.io"
+  timeoutForControlPlane: 4m0s
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+# kubelet specific options here
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+# kube-proxy specific options here
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: "192.168.34.2"
+  bindPort: 6443
