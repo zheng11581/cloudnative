@@ -1,7 +1,7 @@
-#### [Tools collections](https://kubernetes.io/docs/tasks/tools/)
+### [Tools collections](https://kubernetes.io/docs/tasks/tools/)
 https://kubernetes.io/docs/tasks/tools/
 
-#### bash auto-completion on Linux
+### bash auto-completion on Linux
 
 ##### Install bash-completion
 ```shell
@@ -25,7 +25,7 @@ echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -F __start_kubectl k' >>~/.bashrc
 ```
 
-#### bash auto-completion on macOS
+### bash auto-completion on macOS
 ```shell
 bash_complation@1 --> bash@3.2
 bash_completion@2 --> bash@4.1+
