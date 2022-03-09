@@ -15,7 +15,7 @@ Grafana 告警频道（Alert Channel）
 
 用户（User）
 
-使用方法很简单，跑个容器就好了嘛，不过作者提供的 Dockerfile 我不是很满意，自己修改了点内容：
+### 使用方法很简单，跑个容器就好了嘛，不过作者提供的 Dockerfile 我不是很满意，自己修改了点内容：
 
 ```dockerfile
 FROM alpine:latest
@@ -36,7 +36,7 @@ WORKDIR /opt/grafana-backup-tool
 USER 1337
 ```
 
-只有 Dockerfile 不行，还得通过 CI/CD 自动构建并推送到 docker.io。不要问我用什么，当然是白嫖 GitHub Action，workflow 内容如下：
+### 只有 Dockerfile 不行，还得通过 CI/CD 自动构建并推送到 docker.io。不要问我用什么，当然是白嫖 GitHub Action，workflow 内容如下：
 ```yaml
 #=================================================
 # https://github.com/yangchuansheng/docker-image
@@ -114,16 +114,16 @@ jobs:
               #README_FILEPATH: grafana-backup-tool/readme.md
 ```
 
-你可以直接关注我的仓库：
+### 你可以直接关注我的仓库：
 https://github.com/yangchuansheng/docker-image
 
 构建好镜像后，就可以直接运行容器来进行备份和恢复操作了。如果你想在集群内操作，可以通过 Deployment 或 Job 来实现；如果你想在本地或 k8s 集群外操作，可以选择 docker run，我不反对，你也可以选择 docker-compose，这都没问题。但我要告诉你一个更骚的办法，可以骚到让你无法自拔。
 
 首先需要在本地或集群外安装 Podman，如果操作系统是 Win10，可以考虑通过 WSL 来安装；如果操作系统是 Linux，那就不用说了；如果操作系统是 MacOS，请参考我的上篇文章：????在 macOS 中使用 Podman。
 
-装好了 Podman 之后，就可以进行骚操作了，请睁大眼睛。
+### 装好了 Podman 之后，就可以进行骚操作了，请睁大眼睛。
 
-先编写一个 Deployment 配置清单（什么？Deployment？是的，你没听错）：
+#### 先编写一个 Deployment 配置清单（什么？Deployment？是的，你没听错）：
 
 ```yaml
 apiVersion: apps/v1
@@ -222,166 +222,10 @@ $ grafana-backup restore --components=folders,dashboards
 
 至此，再也不用怕 Dashboard 被改掉或删除啦。
 
-最后提醒一下，Prometheus Operator 项目中的 Grafana 通过 Provisioning[4] 的方式 预导入 了一些默认的 Dashboards，这本来没有什么问题，但 grafana-backup-tool 工具无法忽略跳过已经存在的配置，如果恢复的过程中遇到已经存在的配置，会直接报错退出。本来这也很好解决，一般情况下到 Grafana Web 界面中删除所有的 Dashboard 就好了，但通过 Provisioning 导入的 Dashboard 是无法删除的，这就很尴尬了。
+最后提醒一下，Prometheus Operator 项目中的 Grafana 通过 Provisioning[4] 的方式 预导入 了一些默认的 Dashboards。
+这本来没有什么问题，但 grafana-backup-tool 工具无法忽略跳过已经存在的配置，如果恢复的过程中遇到已经存在的配置，会直接报错退出。
+本来这也很好解决，一般情况下到 Grafana Web 界面中删除所有的 Dashboard 就好了，但通过 Provisioning 导入的 Dashboard 是无法删除的，这就很尴尬了。
 
-在作者修复这个 bug 之前，要想解决这个问题，有两个办法：
+在作者修复这个 bug 之前，要想解决这个问题办法：
 
-第一个办法是在恢复之前将 Grafana Deployment 中关于  Provisioning 的配置全部删除，就是这些配置：
-```shell
-        volumeMounts:
-        - mountPath: /etc/grafana/provisioning/datasources
-          name: grafana-datasources
-          readOnly: false
-        - mountPath: /etc/grafana/provisioning/dashboards
-          name: grafana-dashboards
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/apiserver
-          name: grafana-dashboard-apiserver
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/cluster-total
-          name: grafana-dashboard-cluster-total
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/controller-manager
-          name: grafana-dashboard-controller-manager
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-cluster
-          name: grafana-dashboard-k8s-resources-cluster
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-namespace
-          name: grafana-dashboard-k8s-resources-namespace
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-node
-          name: grafana-dashboard-k8s-resources-node
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-pod
-          name: grafana-dashboard-k8s-resources-pod
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-workload
-          name: grafana-dashboard-k8s-resources-workload
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/k8s-resources-workloads-namespace
-          name: grafana-dashboard-k8s-resources-workloads-namespace
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/kubelet
-          name: grafana-dashboard-kubelet
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/namespace-by-pod
-          name: grafana-dashboard-namespace-by-pod
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/namespace-by-workload
-          name: grafana-dashboard-namespace-by-workload
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/node-cluster-rsrc-use
-          name: grafana-dashboard-node-cluster-rsrc-use
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/node-rsrc-use
-          name: grafana-dashboard-node-rsrc-use
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/nodes
-          name: grafana-dashboard-nodes
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/persistentvolumesusage
-          name: grafana-dashboard-persistentvolumesusage
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/pod-total
-          name: grafana-dashboard-pod-total
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/prometheus-remote-write
-          name: grafana-dashboard-prometheus-remote-write
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/prometheus
-          name: grafana-dashboard-prometheus
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/proxy
-          name: grafana-dashboard-proxy
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/scheduler
-          name: grafana-dashboard-scheduler
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/statefulset
-          name: grafana-dashboard-statefulset
-          readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/workload-total
-          name: grafana-dashboard-workload-total
-          readOnly: false
-...
-...
-      volumes:
-      - name: grafana-datasources
-        secret:
-          secretName: grafana-datasources
-      - configMap:
-          name: grafana-dashboards
-        name: grafana-dashboards
-      - configMap:
-          name: grafana-dashboard-apiserver
-        name: grafana-dashboard-apiserver
-      - configMap:
-          name: grafana-dashboard-cluster-total
-        name: grafana-dashboard-cluster-total
-      - configMap:
-          name: grafana-dashboard-controller-manager
-        name: grafana-dashboard-controller-manager
-      - configMap:
-          name: grafana-dashboard-k8s-resources-cluster
-        name: grafana-dashboard-k8s-resources-cluster
-      - configMap:
-          name: grafana-dashboard-k8s-resources-namespace
-        name: grafana-dashboard-k8s-resources-namespace
-      - configMap:
-          name: grafana-dashboard-k8s-resources-node
-        name: grafana-dashboard-k8s-resources-node
-      - configMap:
-          name: grafana-dashboard-k8s-resources-pod
-        name: grafana-dashboard-k8s-resources-pod
-      - configMap:
-          name: grafana-dashboard-k8s-resources-workload
-        name: grafana-dashboard-k8s-resources-workload
-      - configMap:
-          name: grafana-dashboard-k8s-resources-workloads-namespace
-        name: grafana-dashboard-k8s-resources-workloads-namespace
-      - configMap:
-          name: grafana-dashboard-kubelet
-        name: grafana-dashboard-kubelet
-      - configMap:
-          name: grafana-dashboard-namespace-by-pod
-        name: grafana-dashboard-namespace-by-pod
-      - configMap:
-          name: grafana-dashboard-namespace-by-workload
-        name: grafana-dashboard-namespace-by-workload
-      - configMap:
-          name: grafana-dashboard-node-cluster-rsrc-use
-        name: grafana-dashboard-node-cluster-rsrc-use
-      - configMap:
-          name: grafana-dashboard-node-rsrc-use
-        name: grafana-dashboard-node-rsrc-use
-      - configMap:
-          name: grafana-dashboard-nodes
-        name: grafana-dashboard-nodes
-      - configMap:
-          name: grafana-dashboard-persistentvolumesusage
-        name: grafana-dashboard-persistentvolumesusage
-      - configMap:
-          name: grafana-dashboard-pod-total
-        name: grafana-dashboard-pod-total
-      - configMap:
-          name: grafana-dashboard-prometheus-remote-write
-        name: grafana-dashboard-prometheus-remote-write
-      - configMap:
-          name: grafana-dashboard-prometheus
-        name: grafana-dashboard-prometheus
-      - configMap:
-          name: grafana-dashboard-proxy
-        name: grafana-dashboard-proxy
-      - configMap:
-          name: grafana-dashboard-scheduler
-        name: grafana-dashboard-scheduler
-      - configMap:
-          name: grafana-dashboard-statefulset
-        name: grafana-dashboard-statefulset
-      - configMap:
-          name: grafana-dashboard-workload-total
-        name: grafana-dashboard-workload-total
-```
-
-第二个办法就是删除 Prometheus Operator 自带的 Grafana，自己通过 Helm 或者 manifest 部署不使用 Provisioning 的 Grafana。
+#### 第二个办法就是删除 Prometheus Operator 自带的 Grafana，自己通过 Helm 或者 manifest 部署不使用 Provisioning 的 Grafana。
