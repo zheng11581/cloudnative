@@ -1,9 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"httpserver/metrics"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
@@ -13,23 +18,22 @@ import (
 	"time"
 )
 
-//func init()  {
-//	flag.Set("v", "4")
-//	flag.Parse()
-//}
-
 func main() {
-	//glog.V(2).Info("Starting http server...")
-	//defer glog.Flush()
+	flag.Set("v", "4")
+	flag.Parse()
+	defer glog.Flush()
+	glog.V(2).Info("Starting http server...")
+	metrics.Register()
 
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-	log.Println("Starting http server...")
+	//log.Println("Starting http server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthz)
 	mux.HandleFunc("/header", header)
 	mux.HandleFunc("/logging", logging)
 	mux.HandleFunc("/", index)
+	mux.Handle("/metrics", promhttp.Handler())
 
 	go func() {
 		err := http.ListenAndServe(":8080", mux)
@@ -41,15 +45,16 @@ func main() {
 	for sig := range c {
 		switch sig {
 		case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
-			log.Print("Waiting 5 seconds for grace shutdown...")
+			glog.Info("Waiting 5 seconds for grace shutdown...")
 			time.Sleep(time.Second * 5)
 			ShutDown()
 		}
 	}
+	glog.Info("Server Exited Properly")
 }
 
 func ShutDown() {
-	log.Print("Starting quit...")
+	glog.Info("Starting quit...")
 	os.Exit(0)
 }
 
@@ -62,7 +67,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.RequestURI() == "/favicon.ico" {
 		return
 	}
-	log.Println("Entering root handler...")
+	glog.Info("Entering root handler...")
+	timer := metrics.NewTimer()
+	defer timer.ObserveTotal()
+	delay := randInt(20, 2000)
+	time.Sleep(time.Millisecond * time.Duration(delay))
 	user := r.URL.Query().Get("user")
 	if user != "" {
 		io.WriteString(w, fmt.Sprintf("Hello, [%s]\n", user))
@@ -77,11 +86,16 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func randInt(min int, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return min + rand.Intn(max-min)
+}
+
 func header(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering header handler...")
+	glog.Info("Entering header handler...")
 	version := os.Getenv("VERSION")
 	w.Header().Set("VERSION", version)
-	log.Printf("VERSION is %s", version)
+	glog.Infof("VERSION is %s", version)
 	for k, v := range r.Header {
 		for _, vv := range v {
 			w.Header().Set(k, vv)
@@ -90,10 +104,10 @@ func header(w http.ResponseWriter, r *http.Request) {
 }
 
 func logging(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entering logging handler...")
+	glog.Info("Entering logging handler...")
 	ip := ClientIP(r)
 	io.WriteString(w, fmt.Sprintf("IP is: %s", ip))
-	log.Printf("IP is: %s", ip)
+	glog.Infof("IP is: %s", ip)
 
 }
 

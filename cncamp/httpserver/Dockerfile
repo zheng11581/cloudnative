@@ -1,5 +1,5 @@
 FROM golang:1.17.6 as build
-ENV GO111MODULE=off \
+ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
     GOARCH=amd64
@@ -16,5 +16,5 @@ RUN apk add --no-cache tini
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Run your program under Tini
- CMD ["/httpserver"]
+CMD ["/httpserver"]
 # ENTRYPOINT ["/httpserver"]

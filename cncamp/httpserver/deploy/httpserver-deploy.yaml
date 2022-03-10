@@ -25,6 +25,9 @@ spec:
       run: httpserver
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
       labels:
         run: httpserver
     spec:
@@ -33,9 +36,11 @@ spec:
       imagePullSecrets:
         - name: harbor-registry-secret
       containers:
-#        - image: zheng11581/httpserver:v3.0
-        - image: 192.168.110.72/gene/httpserver:v3.0
+        - image: zheng11581/httpserver:v3.0-metrics
+#        - image: 192.168.110.72/gene/httpserver:v3.0-metrics
           name: httpserver
+          ports:
+            - containerPort: 8080
           env:
             - name: VERSION
               valueFrom:

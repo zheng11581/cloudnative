@@ -1,4 +1,4 @@
-export tag=v3.0
+export tag=v3.0-metrics
 root:
 	export ROOT=cncamp
 
