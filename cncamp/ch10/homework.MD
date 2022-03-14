@@ -6,6 +6,6 @@
 [Deployment](../httpserver/deploy/httpserver-deploy.yaml)
 
 #### 4. 从 Promethus 界面中查询延时指标数据；
-
+![img.png](img.png)
 
 #### 5.（可选）创建一个 Grafana Dashboard 展现延时分配情况

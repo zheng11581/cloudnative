@@ -19,11 +19,11 @@ PS C:\Users\ThinkPad> set GO111MODULE="on"
 PS C:\Users\ThinkPad> go get sigs.k8s.io/kind@v0.11.1
 
 # kind操作集群
-kind create cluster --image kindest/node:latest --name kind-kind
+kind create cluster --image kindest/node:1.23.3 --name kind-kind
 kubectl cluster-info --context kind-kind
 kind delete cluster
 # 或者使用配置文件启动集群
-kind create cluster --config kind-example-config.yaml --image kindest/node:latest
+kind create cluster --config kind-example-config.yaml --image kindest/node:1.23.3
 
 # 检查一下所有可用的上下文
 kubectl config get-contexts
