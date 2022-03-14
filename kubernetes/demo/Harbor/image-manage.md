@@ -38,6 +38,11 @@ kubectl create secret docker-registry regcred -n devops \
   --docker-server=192.168.110.72 \
   --docker-username=admin \
   --docker-password=xxx
+  
+kubectl create secret docker-registry regcred -n devops \
+  --docker-server=registry.cn-beijing.aliyuncs.com \
+  --docker-username=gobroadyun \
+  --docker-password=reg@Aliyun.123
 ```
 
 #### 4. 
