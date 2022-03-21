@@ -16,7 +16,7 @@ spec:
       serviceAccount: jenkins
       containers:
       - name: jenkins
-        image:  xianchao/jenkins:v1
+        image: bitnami/jenkins:2.319.3
         # image: jenkinszh/jenkins-k8s:2.204.5
         # zheng11581/alauda-jenkins:2.289.3-v3.6.9
         imagePullPolicy: IfNotPresent
