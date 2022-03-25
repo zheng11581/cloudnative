@@ -6,8 +6,7 @@
 3. 考虑 open tracing 的接入
 ```
 
-### 1. 如何实现安全保证: TLS证书
-### 2. 七层路由规则: HTTP Rewrite
+### 1. 如何实现安全保证: TLS证书 && 2. 七层路由规则: HTTP Rewrite
 
 #### [Deploy httpserver](../httpserver/deploy/httpserver-ingressgw.yaml)
 
