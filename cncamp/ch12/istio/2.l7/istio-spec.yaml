@@ -9,12 +9,25 @@ spec:
     - simple.cncamp.io
   http:
     - match:
-        - port: 80
+        - uri:
+            exact: "/simple/hello"
+      rewrite:
+        uri: "/hello"
       route:
         - destination:
-            host: simple.simple.svc.cluster.local
+            host: httpserver.simple.svc.cluster.local
             port:
               number: 8080
+    - match:
+        - uri:
+            prefix: "/nginx"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: nginx.simple.svc.cluster.local
+            port:
+              number: 80
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
@@ -28,5 +41,5 @@ spec:
         - simple.cncamp.io
       port:
         name: http-simple
-        number: 80
+        number: 8080
         protocol: HTTP
