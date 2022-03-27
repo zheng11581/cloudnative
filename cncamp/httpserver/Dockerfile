@@ -9,7 +9,6 @@ RUN go build -o httpserver
 
 FROM alpine:3.15
 COPY --from=build /build/httpserver /httpserver
-EXPOSE 8080
 
 RUN apk add --no-cache tini
 # Tini is now available at /sbin/tini

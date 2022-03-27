@@ -32,11 +32,11 @@ func main() {
 	mux.HandleFunc("/healthz", healthz)
 	mux.HandleFunc("/header", header)
 	mux.HandleFunc("/logging", logging)
-	mux.HandleFunc("/", index)
+	mux.HandleFunc("/hello", hello)
 	mux.Handle("/metrics", promhttp.Handler())
 
 	go func() {
-		err := http.ListenAndServe(":8080", mux)
+		err := http.ListenAndServe(":80", mux)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -63,14 +63,14 @@ func healthz(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "ok\n")
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
+func hello(w http.ResponseWriter, r *http.Request) {
 	if r.URL.RequestURI() == "/favicon.ico" {
 		return
 	}
 	glog.Info("Entering root handler...")
 	timer := metrics.NewTimer()
 	defer timer.ObserveTotal()
-	delay := randInt(20, 2000)
+	delay := randInt(2000, 5000)
 	time.Sleep(time.Millisecond * time.Duration(delay))
 	user := r.URL.Query().Get("user")
 	if user != "" {
@@ -80,6 +80,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 	io.WriteString(w, "Reading request headers to response...\n")
 	header := r.Header
+	header.Set("Delay", fmt.Sprintf("%d ms", delay))
 	for k, v := range header {
 		io.WriteString(w, fmt.Sprintf("%s=%s\n", k, v))
 	}
