@@ -27,7 +27,7 @@ istio-ingressgateway   LoadBalancer   $INGRESS_IP
 ### Access the tracing via ingress for 100 times(sampling rate is 1%)
 
 ```sh
-curl $INGRESS_IP/service0
+for i in {1..100}; do curl $INGRESS_IP/service0 -I; done
 ```
 
 ### Check tracing dashboard
