@@ -21,7 +21,8 @@ contexts:
 ```
 kind create cluster --image kindest/node:v1.23.5 --name federation
 cd kubefed
-cp bin/kubefedctl-linux-amd64 /usr/local/bin/kubefedctl
+make kubefedctl
+cp bin/kubefedctl-* /usr/local/bin/kubefedctl
 helm repo add kubefed-charts https://raw.githubusercontent.com/kubernetes-sigs/kubefed/master/charts
 helm --namespace kube-federation-system upgrade -i kubefed kubefed-charts/kubefed --version=0.9.1 --create-namespace
 kubectl get all -n kube-federation-system
@@ -37,8 +38,9 @@ kubectl config set-credentials --kubeconfig=config-demo gke-us-01 --auth-provide
 kubectl config set-context --kubeconfig=config-demo gke-us-01 --cluster=gke-us-01 --user=gke-us-01
 kubectl config use-context --kubeconfig=config-demo gke-us-01
 
-https://kubernetes.io/zh/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
-https://betterprogramming.pub/build-a-federation-of-multiple-kubernetes-clusters-with-kubefed-v2-8d2f7d9e198a
+
+
+kubefedctl join gke-asia-01 --host-cluster-name=kind-federation --host-cluster-context=kind-federation --cluster-context=gke-asia-01
 
 kubectl -n kube-federation-system get kubefedcluster -oyaml
 ```
@@ -59,7 +61,7 @@ kubectl get all -n kube-federation-system
 ### 将namespace设置为联邦对象
 ```
 kubectl create ns federate-me
-./bin/kubefedctl federate ns federate-me
+kubefedctl federate ns federate-me
 
 ```
 ### 创建FederatedDeployment
