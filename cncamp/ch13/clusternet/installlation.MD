@@ -51,6 +51,7 @@ helm delete clusternet-scheduler -n clusternet-system
 ```shell
 https://github.com/clusternet/charts/tree/main/charts/clusternet-agent
 
+helm repo add clusternet https://clusternet.github.io/charts
 helm install clusternet-agent -n clusternet-system --create-namespace \
 --set parentURL=https://xxx:443 \
 --set registrationToken=07401b.f395accd246ae52d \
