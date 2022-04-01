@@ -2,7 +2,7 @@
 
 ```sh
 curl -L https://istio.io/downloadIstio | sh -
-cd istio-1.12.0
+cd istio-1.13.2
 cp bin/istioctl /usr/local/bin
 istioctl install --set profile=demo -y
 ```
