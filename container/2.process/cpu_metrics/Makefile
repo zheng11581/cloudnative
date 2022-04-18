@@ -1,7 +1,7 @@
 clean:
 	rm -f *.o threads-cpu
 	docker rmi registry/cpu_metrics:v1
-threads-cpu: clean
+threads-cpu:
 	gcc -o threads-cpu threads-cpu.c -lpthread
 image: threads-cpu
 	docker build -t registry/cpu_metrics:v1 .
