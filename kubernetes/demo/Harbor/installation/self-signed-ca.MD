@@ -1,5 +1,5 @@
 ### Error: x509: certificate signed by unknown authority
-正产情况下，Linux docker 配置完ca.crt后，就可以登录Harbor了;
+正常情况下，Linux docker 配置完ca.crt后，就可以登录Harbor了。
 但是如果还是报上面的错，按照一下方式修改 (docker desktop也可以） 
 
 #### Mac
