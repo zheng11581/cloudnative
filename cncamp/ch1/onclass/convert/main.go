@@ -1,10 +1,11 @@
 package main
 
 import (
-	demoif "cncamp/ch1/onclass/interface"
 	"encoding/json"
 	"fmt"
 	"strconv"
+
+	demoif "github.com/zheng11581/cloudnative/cncamp/ch1/onclass/interface"
 )
 
 func main() {

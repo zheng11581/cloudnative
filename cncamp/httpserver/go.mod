@@ -1,4 +1,4 @@
-module httpserver
+module github.com/zheng11581/cloudnative/cncamp/httpserver
 
 go 1.17
 

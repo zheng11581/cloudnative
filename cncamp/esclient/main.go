@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cncamp/utils"
+	"github.com/zheng11581/cloudnative/cncamp/utils"
 )
 
 func main() {

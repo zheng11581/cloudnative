@@ -3,9 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/golang/glog"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"httpserver/metrics"
 	"io"
 	"log"
 	"math/rand"
@@ -16,6 +13,10 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/zheng11581/cloudnative/cncamp/httpserver/metrics"
 )
 
 func main() {

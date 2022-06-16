@@ -1,10 +1,11 @@
 package main
 
 import (
-	"cncamp/ch1/onclass/interface"
 	"encoding/json"
 	"fmt"
 	"log"
+
+	demoif "github.com/zheng11581/cloudnative/cncamp/ch1/onclass/interface"
 )
 
 func Unmarshal2Struct(objStr string) interface{} {
