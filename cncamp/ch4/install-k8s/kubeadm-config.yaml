@@ -1,0 +1,21 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.23.4
+controlPlaneEndpoint: 192.168.3.160:16443
+imageRepository: registry.aliyuncs.com/google_containers
+apiServer:
+ certSANs:
+ - 192.168.3.160
+ - 192.168.3.161
+ - 192.168.3.162
+ - 192.168.3.163
+ - 192.168.3.164
+ - 192.168.3.165
+ - 192.168.3.166
+networking:
+ podSubnet: 10.244.0.0/16
+ serviceSubnet: 10.10.0.0/16
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: ipvs
