@@ -64,3 +64,25 @@ admin
 ```
 
 ### Login From http://<nodeip>:3000
+
+### Grafana dashboard
+
+```text
+Cluster Health: 6417
+Pod Dashboard: 9729
+Istio Mesh: 7639
+```
+
+### Uninstall Helm Chart
+
+```shell
+# helm uninstall demo
+# kubectl delete crd alertmanagerconfigs.monitoring.coreos.com
+# kubectl delete crd alertmanagers.monitoring.coreos.com
+# kubectl delete crd podmonitors.monitoring.coreos.com
+# kubectl delete crd probes.monitoring.coreos.com
+# kubectl delete crd prometheuses.monitoring.coreos.com
+# kubectl delete crd prometheusrules.monitoring.coreos.com
+# kubectl delete crd servicemonitors.monitoring.coreos.com
+# kubectl delete crd thanosrulers.monitoring.coreos.com
+```
