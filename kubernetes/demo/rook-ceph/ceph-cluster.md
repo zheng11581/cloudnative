@@ -55,14 +55,14 @@ kubectl create -f csi/rbd/storageclass-test.yaml
 ### Check configuration
 
 ```sh
-k get configmap -n rook-ceph rook-ceph-operator-config -oyaml
+kubectl get configmap -n rook-ceph rook-ceph-operator-config -oyaml
 ROOK_CSI_ENABLE_RBD: "true"
 ```
 
 ### Check csidriver
 
 ```sh
-k get csidriver rook-ceph.rbd.csi.ceph.com
+kubectl get csidriver rook-ceph.rbd.csi.ceph.com
 ```
 
 ### Check csi plugin configuration
@@ -115,7 +115,7 @@ kubectl create -f pod.yaml
 ### Enter pod and write some data
 
 ```sh
-kubeclt exec -it task-pv-pod sh
+kubectl exec -it ceph-pv-pod -- sh
 cd /mnt/ceph
 echo hello world > hello.log
 ```
@@ -131,7 +131,7 @@ kubectl create -f pod.yaml
 ```sh
 kubectl delete -f pod.yaml
 kubectl create -f pod.yaml
-kubeclt exec -it task-pv-pod sh
+kubeclt exec -it ceph-pv-pod -- sh
 cd /mnt/ceph
 ls
 ```
@@ -139,14 +139,8 @@ ls
 ### Expose dashboard
 
 ```sh
-kubectl get svc rook-ceph-mgr-dashboard -n rook-ceph -oyaml>svc1.yaml
-vi svc1.yaml
-```
+kubectl --namespace rook-ceph port-forward service/rook-ceph-mgr-dashboard --address 0.0.0.0 7000
 
-Rename the svc and set service type as NodePort:
-
-```sh
-k create -f svc1.yaml
 kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
 ```
 
