@@ -95,7 +95,7 @@ kubectl get csidriver rook-ceph.rbd.csi.ceph.com
 ```
 
 ```sh
-k get po csi-rbdplugin-j4s6c -n rook-ceph -oyaml
+kubectl get po csi-rbdplugin-j4s6c -n rook-ceph -oyaml
 /var/lib/kubelet/plugins/rook-ceph.rbd.csi.ceph.com
 ```
 
@@ -118,12 +118,6 @@ kubectl create -f pod.yaml
 kubectl exec -it ceph-pv-pod -- sh
 cd /mnt/ceph
 echo hello world > hello.log
-```
-
-### Exit pod and delete the pod
-
-```sh
-kubectl create -f pod.yaml
 ```
 
 ### Recreate the pod and check /mnt/ceph again, and you will find the file is there
