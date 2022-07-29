@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-with-parameters
+spec:
+  params:
+    - name: gitrepo
+      type: object
+      properties:
+        url:
+          type: string
+        commit:
+          type: string
+    - name: context
+      type: array
+    - name: someURL
+      type: string
+    - name: foo.bar
+      description: "the name contains dot character"
+      default: "test"
+  results:
+    - name: echo-output
+      description: "successful echo"
+  steps:
+    - name: clone
+      image: bitnami/git:2.37.1
+      args: ["-url=$(params.gitrepo.url)", "-revision=$(params.gitrepo.commit)"]
+    # - name: build
+    #   image: golang:1.18.4-alpine
+    #   args: [
+    #       "go",
+    #       "build",
+    #       "$(params.flags[*])",
+    #       # It would be equivalent to use $(params["someURL"]) here,
+    #       # which is necessary when the parameter name contains '.'
+    #       # characters (e.g. `$(params["some.other.URL"])`). See the example in step "echo-param"
+    #       "url=$(params.someURL)",
+    #     ]
+    # - name: echo-param
+    #   image: bash
+    #   script: |
+    #     set -e
+    #     echo $(params["foo.bar"]) | tee $(results.echo-output.path)

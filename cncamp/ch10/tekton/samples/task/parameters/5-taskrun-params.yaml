@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: run-with-parameters
+spec:
+  taskRef:
+    name: task-with-parameters
+  params:
+    - name: gitrepo
+      value:
+        url: "https://github.com/cncamp/golang.git"
+        commit: ""
+    - name: flags
+      value:
+        - "--set"
+        - "arg1=foo"
+        - "--randomflag"
+        - "--someotherflag"
+    - name: someURL
+      value: "http://google.com"
