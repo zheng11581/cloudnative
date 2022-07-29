@@ -17,12 +17,6 @@ spec:
         #!/usr/bin/env bash
         echo "Hello from Bash!"
 
-    - name: python
-      image: python # Running python within Steps
-      script: |
-        #!/usr/bin/env python3
-        print("Hello from Python!")
-
   params:
     - name: username
       type: string
