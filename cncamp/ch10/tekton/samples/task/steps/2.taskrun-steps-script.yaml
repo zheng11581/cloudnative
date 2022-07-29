@@ -5,4 +5,4 @@ metadata:
 
 spec:
   taskRef:
-    name: script
+    name: step-demo-script
