@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-  name: run-with-parameters
+  name: taskrun-with-params
 spec:
   taskRef:
     name: task-with-parameters
