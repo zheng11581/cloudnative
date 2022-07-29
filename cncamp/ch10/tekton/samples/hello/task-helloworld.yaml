@@ -10,6 +10,12 @@ spec:
         - echo
       args:
         - "Hello $(params.username)!"
+    - name: sleep
+      image: ubuntu
+      command:
+        - sleep
+      args:
+        - 300
   params:
     - name: username
       type: string
