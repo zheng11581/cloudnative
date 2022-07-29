@@ -24,25 +24,11 @@ spec:
   steps:
     - name: clone
       image: bitnami/git:2.37.1
-      args: ["-url=$(params.gitrepo.url)", "-revision=$(params.gitrepo.commit)"]
+      args:
+        - "-url=$(params.gitrepo.url)"
+        - "-revision=$(params.gitrepo.commit)"
     - name: sleep
       image: ubuntu
       script: |
         #!/usr/bin/env bash
         sleep 600
-    # - name: build
-    #   image: golang:1.18.4-alpine
-    #   args: [
-    #       "go",
-    #       "build",
-    #       "$(params.flags[*])",
-    #       # It would be equivalent to use $(params["someURL"]) here,
-    #       # which is necessary when the parameter name contains '.'
-    #       # characters (e.g. `$(params["some.other.URL"])`). See the example in step "echo-param"
-    #       "url=$(params.someURL)",
-    #     ]
-    # - name: echo-param
-    #   image: bash
-    #   script: |
-    #     set -e
-    #     echo $(params["foo.bar"]) | tee $(results.echo-output.path)
