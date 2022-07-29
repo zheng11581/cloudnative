@@ -6,15 +6,9 @@ spec:
   taskRef:
     name: task-with-parameters
   params:
-    - name: gitrepo
-      value:
-        url: "https://github.com/cncamp/golang.git"
-        commit: ""
-    - name: flags
-      value:
-        - "--set"
-        - "arg1=foo"
-        - "--randomflag"
-        - "--someotherflag"
-    - name: someURL
-      value: "http://google.com"
+    - name: git-url
+      value: "https://github.com/cncamp/golang.git"
+    - name: commit-id
+      value: "dadasdad"
+    - name: "foo.bar"
+      value: "https://www.google.com"

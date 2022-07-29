@@ -4,16 +4,9 @@ metadata:
   name: task-with-parameters
 spec:
   params:
-    - name: gitrepo
-      type: object
-      properties:
-        url:
-          type: string
-        commit:
-          type: string
-    - name: context
-      type: array
-    - name: someURL
+    - name: git-url
+      type: string
+    - name: commit-id
       type: string
     - name: foo.bar
       description: "the name contains dot character"
@@ -25,8 +18,8 @@ spec:
     - name: clone
       image: bitnami/git:2.37.1
       args:
-        - "-url=$(params.gitrepo.url)"
-        - "-revision=$(params.gitrepo.commit)"
+        - "-url=$(params.url)"
+        - "-revision=$(params.commit)"
     - name: sleep
       image: ubuntu
       script: |
