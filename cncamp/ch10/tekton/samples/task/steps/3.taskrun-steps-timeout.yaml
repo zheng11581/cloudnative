@@ -5,4 +5,4 @@ metadata:
 
 spec:
   taskRef:
-    name: timeout
+    name: step-demo-timout
