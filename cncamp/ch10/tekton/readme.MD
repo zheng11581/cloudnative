@@ -27,6 +27,10 @@ https://tekton.dev/docs/getting-started/
 
 ### Defining Steps
 
-### Specifying a timeout
+### Specifying Parameters
+
+### Specifying Workspaces
+
+
 
 

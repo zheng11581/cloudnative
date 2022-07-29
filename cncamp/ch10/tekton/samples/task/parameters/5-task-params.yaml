@@ -8,9 +8,9 @@ spec:
       type: string
     - name: commit-id
       type: string
-    - name: foo.bar
-      description: "the name contains dot character"
-      default: "test"
+  results:
+    - name: echo-output
+      description: "successful echo"
   steps:
     - name: echo
       image: ubuntu
@@ -20,3 +20,8 @@ spec:
         - "$(params.git-url)"
         - "-"
         - "$(params.commit-id)"
+    - name: sleep
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        sleep 600
