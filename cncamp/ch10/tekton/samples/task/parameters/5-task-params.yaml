@@ -24,9 +24,6 @@ spec:
   steps:
     - name: clone
       image: bitnami/git:2.37.1
-      commands:
-        - "git"
-        - "clone"
       args: ["-url=$(params.gitrepo.url)", "-revision=$(params.gitrepo.commit)"]
     - name: sleep
       image: ubuntu
