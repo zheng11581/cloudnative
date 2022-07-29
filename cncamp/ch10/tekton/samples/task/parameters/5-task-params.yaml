@@ -11,17 +11,12 @@ spec:
     - name: foo.bar
       description: "the name contains dot character"
       default: "test"
-  results:
-    - name: echo-output
-      description: "successful echo"
   steps:
-    - name: clone
-      image: bitnami/git:2.37.1
-      args:
-        - "-url=$(params.git-url)"
-        - "-revision=$(params.commit-id)"
-    - name: sleep
+    - name: echo
       image: ubuntu
-      script: |
-        #!/usr/bin/env bash
-        sleep 600
+      command:
+        - "echo"
+      args:
+        - "$(params.git-url)"
+        - "-"
+        - "$(params.commit-id)"

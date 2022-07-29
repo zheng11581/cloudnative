@@ -10,5 +10,3 @@ spec:
       value: "https://github.com/cncamp/golang.git"
     - name: commit-id
       value: "dadasdad"
-    - name: "foo.bar"
-      value: "https://www.google.com"
