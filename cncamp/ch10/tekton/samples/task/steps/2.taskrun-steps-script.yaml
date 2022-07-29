@@ -6,3 +6,6 @@ metadata:
 spec:
   taskRef:
     name: step-demo-script
+  params:
+    - name: "username"
+      value: "jesse"
