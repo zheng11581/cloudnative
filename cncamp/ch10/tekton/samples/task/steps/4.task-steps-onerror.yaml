@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: step-demo
+  name: step-demo-onerror
 spec:
   steps:
     - image: docker.io/library/golang:latest
@@ -9,3 +9,8 @@ spec:
       onError: continue #
       script: |
         go test .
+    - name: bash # Running bash within Steps
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        echo "Hello from Bash!"
