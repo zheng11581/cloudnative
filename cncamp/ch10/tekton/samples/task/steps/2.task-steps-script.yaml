@@ -23,12 +23,6 @@ spec:
         #!/usr/bin/env python3
         print("Hello from Python!")
 
-    - name: powershell
-      image: mcr.microsoft.com/windows/servercore:1809
-      script: |
-        #!win powershell.exe -File
-        echo 'Hello from PowerShell'
-
   params:
     - name: username
       type: string
