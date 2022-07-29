@@ -18,8 +18,8 @@ spec:
     - name: clone
       image: bitnami/git:2.37.1
       args:
-        - "-url=$(params.url)"
-        - "-revision=$(params.commit)"
+        - "-url=$(params.git-url)"
+        - "-revision=$(params.commit-id)"
     - name: sleep
       image: ubuntu
       script: |
