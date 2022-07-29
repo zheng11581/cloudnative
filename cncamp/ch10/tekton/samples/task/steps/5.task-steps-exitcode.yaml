@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: step-demo-exitcode
+spec:
+  steps:
+    - image: docker.io/library/golang:latest
+      name: first
+      script: |
+        #!/usr/bin/env bash
+        echo "Hello from Bash!"
+    - name: secend
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        cat $(steps.step-first.exitCode.path) &&
