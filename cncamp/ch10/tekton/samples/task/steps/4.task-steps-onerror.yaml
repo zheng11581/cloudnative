@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: step-demo
+spec:
+  steps:
+    - image: docker.io/library/golang:latest
+      name: ignore-unit-test-failure
+      onError: continue #
+      script: |
+        go test .

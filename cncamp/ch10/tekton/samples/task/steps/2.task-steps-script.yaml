@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: step-demo
+spec:
+  steps:
+    - name: hello
+      image: ubuntu
+      command:
+        - echo
+      args:
+        - "Hello $(params.username)!"
+
+    - name: bash # Running bash within Steps
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        echo "Hello from Bash!"
+
+    - name: python
+      image: python # Running python within Steps
+      script: |
+        #!/usr/bin/env python3
+        print("Hello from Python!")
+
+    - name: powershell
+      image: mcr.microsoft.com/windows/servercore:1809
+      script: |
+        #!win powershell.exe -File
+        echo 'Hello from PowerShell'
+
+  params:
+    - name: username
+      type: string

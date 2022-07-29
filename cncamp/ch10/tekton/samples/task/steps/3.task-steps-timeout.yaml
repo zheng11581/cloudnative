@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: step-demo
+spec:
+  steps:
+    - name: sleep-then-timeout
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        echo "I am supposed to sleep for 60 seconds!"
+        sleep 60
+      timeout: 5s

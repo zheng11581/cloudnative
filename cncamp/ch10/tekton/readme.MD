@@ -1,4 +1,4 @@
-### Setup tekton
+## Setup tekton
 
 ```sh
 # Tekton Pipelines
@@ -12,7 +12,7 @@ kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers
 kubectl apply --filename https://github.com/tektoncd/dashboard/releases/latest/download/tekton-dashboard-release.yaml
 ```
 
-### Setup tekton cli tkn
+## Setup tekton cli tkn
 
 ```sh
 curl -LO https://github.com/tektoncd/cli/releases/download/v0.20.0/tektoncd-cli-0.20.0_Linux-64bit.deb
@@ -20,8 +20,13 @@ sudo dpkg -i ./tektoncd-cli-0.20.0_Linux-64bit.deb
 which tkn
 ```
 
-### Docs
+## Docs
 ```shell
 https://tekton.dev/docs/getting-started/
 ```
+
+### Defining Steps
+
+### Specifying a timeout
+
 
