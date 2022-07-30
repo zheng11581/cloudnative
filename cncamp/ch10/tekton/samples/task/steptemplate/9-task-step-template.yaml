@@ -11,11 +11,15 @@ stepTemplate:
       value: "bar"
 steps:
   - image: ubuntu
-    command: [echo]
-    args: ["FOO is ${FOO}"]
+    command: 
+      - echo
+    args: 
+      - "FOO is ${FOO}"
   - image: ubuntu
-    command: [echo]
-    args: ["FOO is ${FOO}"]
+    command: 
+      - echo
+    args: 
+      - "FOO is ${FOO}"
     env:
       - name: "FOO"
         value: "baz"
