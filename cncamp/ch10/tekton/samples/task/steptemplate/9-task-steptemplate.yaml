@@ -15,12 +15,12 @@ spec:
       command: 
         - echo
       args: 
-        - FOO is ${FOO}
+        - FOO is $FOO
     - image: ubuntu
       command: 
         - echo
       args: 
-        - FOO is ${FOO}
+        - FOO is $FOO
       env:
         - name: "FOO"
           value: "baz"
