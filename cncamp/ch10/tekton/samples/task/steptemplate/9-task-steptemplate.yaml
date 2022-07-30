@@ -18,7 +18,7 @@ spec:
         - "FOO is ${FOO}"
     - image: ubuntu
       command: 
-        - echo]
+        - echo
       args: 
         - "FOO is ${FOO}"
       env:
