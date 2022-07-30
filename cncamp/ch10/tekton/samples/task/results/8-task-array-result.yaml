@@ -12,7 +12,12 @@ spec:
       description: The array results
   steps:
     - name: write-array
-      image: bash:latest
+      image: ubuntu
       script: |
         #!/usr/bin/env bash
         echo -n "[\"hello\",\"world\"]" | tee $(results.array-results.path)
+    - name: sleep
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        sleep 300
