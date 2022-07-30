@@ -1,0 +1,7 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: taskrun-step-template
+spec:
+  taskRef:
+    name: task-step-template
