@@ -1,0 +1,21 @@
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: task-step-template
+  annotations:
+    description: |
+      A simple task that use stepTemplate
+stepTemplate:
+  env:
+    - name: "FOO"
+      value: "bar"
+steps:
+  - image: ubuntu
+    command: [echo]
+    args: ["FOO is ${FOO}"]
+  - image: ubuntu
+    command: [echo]
+    args: ["FOO is ${FOO}"]
+    env:
+      - name: "FOO"
+        value: "baz"

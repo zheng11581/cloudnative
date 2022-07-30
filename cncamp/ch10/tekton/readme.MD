@@ -33,6 +33,12 @@ https://tekton.dev/docs/getting-started/
 
 ### Emitting Results
 
+### Specifying Volumes
+
+### Specifying a Step template
+
+### Specifying Sidecars
+
 
 
 
