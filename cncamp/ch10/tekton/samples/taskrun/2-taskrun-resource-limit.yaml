@@ -16,7 +16,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-  name: taskrun-resource-limit
+  generateName: resource-limit-
 spec:
   taskRef:
     name: task-resource-limit
