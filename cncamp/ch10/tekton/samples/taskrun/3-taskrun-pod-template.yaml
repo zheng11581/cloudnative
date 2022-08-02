@@ -1,11 +1,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: mytask
-  namespace: default
+  name: task-template
 spec:
   steps:
-    - name: writesomething
+    - name: write
       image: ubuntu
       command:
         - bash
@@ -19,13 +18,11 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
 metadata:
-  name: mytaskrun
-  namespace: default
+  generateName: pod-template-
 spec:
   taskRef:
-    name: mytask
+    name: task-template
   podTemplate:
-    schedulerName: volcano
     securityContext:
       runAsNonRoot: true
       runAsUser: 1001
