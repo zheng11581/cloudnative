@@ -14,8 +14,9 @@ spec:
         - while true; do i=i+1; done
     - name: sleep
       image: ubuntu
-      command:
-        - sleep 300
+      script: |
+        #!/usr/bin/env bash
+        sleep 600
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
