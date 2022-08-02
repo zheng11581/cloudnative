@@ -12,6 +12,10 @@ spec:
       args:
         - i=0;
         - while true; do i=i+1; done
+    - name: proc-consume-cpu
+      image: ubuntu
+      command:
+        - sleep 300
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
