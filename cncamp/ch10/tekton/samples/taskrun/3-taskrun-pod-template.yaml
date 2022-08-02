@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: mytask
+  namespace: default
+spec:
+  steps:
+    - name: writesomething
+      image: ubuntu
+      command:
+        - bash
+        - -c
+      args:
+        - echo 'foo' > /my-cache/bar
+      volumeMounts:
+        - name: my-cache
+          mountPath: /my-cache
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: mytaskrun
+  namespace: default
+spec:
+  taskRef:
+    name: mytask
+  podTemplate:
+    schedulerName: volcano
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+    volumes:
+      - name: my-cache
+        persistentVolumeClaim:
+          claimName: my-volume-claim
