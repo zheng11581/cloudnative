@@ -28,5 +28,4 @@ spec:
       runAsUser: 1001
     volumes:
       - name: my-cache
-        persistentVolumeClaim:
-          claimName: my-volume-claim
+        emptydir: {}
