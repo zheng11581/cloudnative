@@ -8,10 +8,9 @@ spec:
       image: ubuntu
       command:
         - bash
-        - -c
+        - c
       args:
-        - i=0;
-        - while true; do i=i+1; done
+        - i=0; while true; do i=i+1; done
     - name: sleep
       image: ubuntu
       script: |
