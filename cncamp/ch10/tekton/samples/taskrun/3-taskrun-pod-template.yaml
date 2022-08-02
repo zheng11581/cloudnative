@@ -28,4 +28,5 @@ spec:
       runAsUser: 1001
     volumes:
       - name: my-cache
-        hostPath: /tmp/my-cache
+        hostPath:
+          - path: /tmp/my-cache
