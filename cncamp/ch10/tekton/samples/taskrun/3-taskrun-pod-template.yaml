@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-template
+spec:
+  steps:
+    - name: write
+      image: ubuntu
+      command:
+        - bash
+        - -c
+      args:
+        - echo 'foo' > /my-cache/bar
+      volumeMounts:
+        - name: my-cache
+          mountPath: /my-cache
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: pod-template-
+spec:
+  taskRef:
+    name: task-template
+  podTemplate:
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+    volumes:
+      - name: my-cache
+        emptydir: {}

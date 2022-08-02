@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: hello-
+spec:
+  params:
+    - name: global
+      value: "hello world"
+    - name: local
+      value: "hello tekton"
+    - name: ci
+      value: "hello ci"
+  taskRef:
+    name: hello
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: hello
+spec:
+  params:
+    - name: global
+      type: "string"
+    - name: local
+      type: "string"
+    - name: ci
+      type: "string"
+
+  steps:
+    - name: print-hello-world
+      image: ubuntu
+      script:
+        #!/usr/bin/env
+        echo $(params.global)
+
+    - name: print-hello-tekton
+      image: ubuntu
+      script:
+        #!/usr/bin/env
+        echo $(params.local)
+
+    - name: print-hello-ci
+      image: ubuntu
+      script:
+        #!/usr/bin/env
+        echo $(params.ci)

@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-resource-limit
+spec:
+  steps:
+    - name: consume-cpu
+      image: ubuntu
+      command:
+        - bash
+        - -c
+      args:
+        - while true; do i=100; done
+      resources:
+        requests:
+          memory: 100Mi
+          cpu: 100m
+        limits:
+          memory: 200Mi
+          cpu: 300m
+    - name: sleep
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        sleep 600
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: resource-limit-
+spec:
+  taskRef:
+    name: task-resource-limit
+  # computeResources: # task-level limit
+  #   requests:
+  #     cpu: 0.1
+  #   limits:
+  #     cpu: 0.3
