@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-resource-limit
+spec:
+  steps:
+    - name: proc-consume-cpu
+      image: ubuntu
+      command:
+        - bash
+        - -c
+      args:
+        - i=0;
+        - while true; do i=i+1; done
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: taskrun-resource-limit
+spec:
+  taskRef:
+    name: task-resource-limit
+  computeResources:
+    requests:
+      cpu: 0.1
+    limits:
+      cpu: 0.3
