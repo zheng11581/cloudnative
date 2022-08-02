@@ -8,7 +8,7 @@ spec:
       image: ubuntu
       command:
         - bash
-        - c
+        - -c
       args:
         - while true; do i=100; done
     - name: sleep
