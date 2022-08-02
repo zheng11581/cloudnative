@@ -11,6 +11,13 @@ spec:
         - -c
       args:
         - while true; do i=100; done
+      resources:
+        requests:
+          memory: 100Mi
+          cpu: 100m
+        limits:
+          memory: 200Mi
+          cpu: 300m
     - name: sleep
       image: ubuntu
       script: |
