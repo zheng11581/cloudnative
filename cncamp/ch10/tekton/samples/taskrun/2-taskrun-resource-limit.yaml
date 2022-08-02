@@ -4,7 +4,7 @@ metadata:
   name: task-resource-limit
 spec:
   steps:
-    - name: proc-consume-cpu
+    - name: consume-cpu
       image: ubuntu
       command:
         - bash
@@ -12,7 +12,7 @@ spec:
       args:
         - i=0;
         - while true; do i=i+1; done
-    - name: proc-consume-cpu
+    - name: sleep
       image: ubuntu
       command:
         - sleep 300
