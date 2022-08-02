@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: image-build-task
+spec:
+  steps:
+    - name: build
+      image: gcr.io/kaniko-project/executor:latest
+  sidecars:
+    - name: logging
+      image: my-logging-image
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: image-build-taskrun
+spec:
+  taskRef:
+    name: image-build-task
+  stepOverrides:
+    - name: build
+      resources:
+        requests:
+          memory: 512Mi
+  sidecarOverrides:
+    - name: logging
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 500m
