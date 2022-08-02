@@ -24,7 +24,7 @@ spec:
     - name: local
       type: "string"
     - name: ci
-      type: "type"
+      type: "string"
 
   steps:
     - name: print-hello-world
