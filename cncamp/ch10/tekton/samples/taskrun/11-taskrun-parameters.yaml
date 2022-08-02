@@ -10,7 +10,8 @@ spec:
       value: "hello tekton"
     - name: ci
       value: "hello ci"
-  taskRef: hello
+  taskRef:
+    name: hello
 
 ---
 apiVersion: tekton.dev/v1beta1
