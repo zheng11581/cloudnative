@@ -28,4 +28,4 @@ spec:
       runAsUser: 1001
     volumes:
       - name: my-cache
-        emptydir: {}
+        hostPath: /tmp/my-cache
