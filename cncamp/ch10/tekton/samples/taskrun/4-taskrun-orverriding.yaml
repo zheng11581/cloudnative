@@ -5,7 +5,7 @@ metadata:
 spec:
   steps:
     - name: build
-      image: gcr.io/kaniko-project/executor:latest
+      image: zheng11581/executor:20220802
   sidecars:
     - name: logging
       image: my-logging-image
