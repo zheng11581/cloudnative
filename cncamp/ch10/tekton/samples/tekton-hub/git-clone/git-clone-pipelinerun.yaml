@@ -7,13 +7,8 @@ spec:
     name: cat-branch-readme
   workspaces:
     - name: shared-data
-      volumeClaimTemplate:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
+      persistentVolumeClaim:
+        claimName: storage-code
   params:
     - name: repo-url
       value: https://github.com/tektoncd/pipeline.git
