@@ -29,7 +29,7 @@ spec:
       default: []
     - name: BUILDER_IMAGE
       description: The image on which builds will run (default is v1.5.1)
-      default: gcr.io/kaniko-project/executor:v1.5.1@sha256:c6166717f7fe0b7da44908c986137ecfeab21f31ec3992f6e128fff8a94be8a5
+      default: zheng11581/kaniko-executor:v1.5.1
   workspaces:
     - name: source
       description: Holds the context and Dockerfile
@@ -58,24 +58,8 @@ spec:
       securityContext:
         runAsUser: 0
     - name: write-url
-      image: docker.io/library/bash:5.1.4@sha256:b208215a4655538be652b2769d82e576bc4d0a2bb132144c060efc5be8c3f5d6
+      image: docker.io/library/bash:5.1.4
       script: |
         set -e
         image="$(params.IMAGE)"
         echo -n "${image}" | tee "$(results.IMAGE_URL.path)"
-
----
-apiVersion: tekton.dev/v1beta1
-kind: TaskRun
-metadata:
-  name: example-run
-spec:
-  taskRef:
-    name: kaniko
-  workspaces:
-    - name: source
-      persistentVolumeClaim:
-        claimName: my-source
-    - name: dockerconfig
-      secret:
-        secretName: my-secret
