@@ -20,24 +20,6 @@ sudo dpkg -i ./tektoncd-cli-0.20.0_Linux-64bit.deb
 which tkn
 ```
 
-## Docs
-```shell
-https://tekton.dev/docs/getting-started/
-```
-
-### Defining Steps
-
-### Specifying Parameters
-
-### Specifying Workspaces
-
-### Emitting Results
-
-### Specifying Volumes
-
-### Specifying a Step template
-
-### Specifying Sidecars
 
 
 
