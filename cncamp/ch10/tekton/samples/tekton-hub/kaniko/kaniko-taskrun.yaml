@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: example-run
+spec:
+  taskRef:
+    name: kaniko
+  workspaces:
+    - name: source
+      persistentVolumeClaim:
+        claimName: storage-code
+  # - name: dockerconfig
+  #   secret:
+  #     secretName: my-secret
