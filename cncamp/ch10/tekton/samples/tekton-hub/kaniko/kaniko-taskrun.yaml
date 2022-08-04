@@ -9,6 +9,11 @@ spec:
     - name: source
       persistentVolumeClaim:
         claimName: storage-code
+  params:
+    - name: CONTEXT
+      value: mall-admin
+    - name: IMAGE
+      value: goharbor.com/mall-swarm/mall-admin
   # - name: dockerconfig
   #   secret:
   #     secretName: my-secret
