@@ -57,9 +57,9 @@ spec:
       # makes it explicit that it needs to run as root.
       securityContext:
         runAsUser: 0
-    - name: write-url
-      image: docker.io/library/bash:5.1.4
-      script: |
-        set -e
-        image="$(params.IMAGE)"
-        echo -n "${image}" | tee "$(results.IMAGE_URL.path)"
+    # - name: write-url
+    #   image: docker.io/library/bash:5.1.4
+    #   script: |
+    #     set -e
+    #     image="$(params.IMAGE)"
+    #     echo -n "${image}" | tee "$(results.IMAGE_URL.path)"
