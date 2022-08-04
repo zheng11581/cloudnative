@@ -61,7 +61,7 @@ spec:
           value: $(params.image)
 
     - name: sleep
-      runAfter: ["kaniko"] # Wait until the clone is done before reading the readme.
+      runAfter: ["build-image"] # Wait until the clone is done before reading the readme.
       workspaces:
         - name: source
           workspace: shared-data
