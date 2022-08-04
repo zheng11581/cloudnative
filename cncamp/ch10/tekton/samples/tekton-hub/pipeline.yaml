@@ -35,41 +35,41 @@ spec:
         This workspace will receive the cloned git repo and be passed
         to the next Task for the repo's README.md file to be read.
   tasks:
-    # - name: fetch-repo
-    #   taskRef:
-    #     name: git-clone
-    #   workspaces:
-    #     - name: output
-    #       workspace: shared-data
-    #   params:
-    #     - name: url
-    #       value: $(params.repo-url)
-    #     - name: revision
-    #       value: $(params.branch-name)
-
-    - name: build-image
-      # runAfter: ["fetch-repo"]
+    - name: fetch-repo
       taskRef:
-        name: kaniko
+        name: git-clone
       workspaces:
-        - name: source
+        - name: output
           workspace: shared-data
       params:
-        - name: CONTEXT
-          value: $(params.context)
-        - name: IMAGE
-          value: $(params.image)
+        - name: url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.branch-name)
 
-    # - name: cat-readme
-    #   runAfter: ["fetch-repo"] # Wait until the clone is done before reading the readme.
+    # - name: build-image
+    #   # runAfter: ["fetch-repo"]
+    #   taskRef:
+    #     name: kaniko
     #   workspaces:
     #     - name: source
     #       workspace: shared-data
-    #   taskSpec:
-    #     workspaces:
-    #       - name: source
-    #     steps:
-    #       - image: zshusers/zsh:4.3.15
-    #         script: |
-    #           #!/usr/bin/env zsh
-    #           cat $(workspaces.source.path)/README.md
+    #   params:
+    #     - name: CONTEXT
+    #       value: $(params.context)
+    #     - name: IMAGE
+    #       value: $(params.image)
+
+    - name: sleep
+      runAfter: ["fetch-repo"] # Wait until the clone is done before reading the readme.
+      workspaces:
+        - name: source
+          workspace: shared-data
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - image: ubuntu
+            script: |
+              #!/usr/bin/env bash
+              sleep 600
