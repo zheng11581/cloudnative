@@ -15,6 +15,6 @@ spec:
     - name: branch-name
       value: master
     - name: context
-      value: mall-swarm/mall-admin
+      value: mall-admin
     - name: image
       value: goharbor.com/mall-swarm/mall-admin
