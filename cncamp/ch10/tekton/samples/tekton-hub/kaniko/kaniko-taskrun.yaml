@@ -13,7 +13,9 @@ spec:
     - name: CONTEXT
       value: mall-admin
     - name: IMAGE
-      value: goharbor.com/mall-swarm/mall-admin
+      value: goharbor.com/mall-swarm
+    - name: IMAGE_URL
+      value: mall-admin
   # - name: dockerconfig
   #   secret:
   #     secretName: my-secret
