@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: cat-branch-readme
+  name: build-image-from-source
 spec:
   description: |
     cat-branch-readme takes a git repository and a branch name and
