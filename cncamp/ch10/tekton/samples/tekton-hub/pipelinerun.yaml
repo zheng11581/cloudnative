@@ -1,10 +1,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: git-clone-checking-out-a-branch
+  name: mall-admin-ci
 spec:
   pipelineRef:
-    name: cat-branch-readme
+    name: build-image-from-source
   workspaces:
     - name: shared-data
       persistentVolumeClaim:
