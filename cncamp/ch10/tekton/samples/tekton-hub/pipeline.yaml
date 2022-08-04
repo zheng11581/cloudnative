@@ -21,6 +21,14 @@ spec:
     - name: branch-name
       type: string
       description: The git branch to clone.
+
+    - name: context
+      type: string
+      description: The code module path.
+    - name: image
+      type: string
+      description: The build image.
+
   workspaces:
     - name: shared-data
       description: |
@@ -38,16 +46,30 @@ spec:
           value: $(params.repo-url)
         - name: revision
           value: $(params.branch-name)
-    - name: cat-readme
-      runAfter: ["fetch-repo"] # Wait until the clone is done before reading the readme.
+
+    - name: build-image
+      runAfter: ["fetch-repo"]
+      taskRef:
+        name: kaniko
       workspaces:
         - name: source
           workspace: shared-data
-      taskSpec:
-        workspaces:
-          - name: source
-        steps:
-          - image: zshusers/zsh:4.3.15
-            script: |
-              #!/usr/bin/env zsh
-              cat $(workspaces.source.path)/README.md
+      params:
+        - name: CONTEXT
+          value: $(params.context)
+        - name: IMAGE
+          value: $(params.image)
+
+    # - name: cat-readme
+    #   runAfter: ["fetch-repo"] # Wait until the clone is done before reading the readme.
+    #   workspaces:
+    #     - name: source
+    #       workspace: shared-data
+    #   taskSpec:
+    #     workspaces:
+    #       - name: source
+    #     steps:
+    #       - image: zshusers/zsh:4.3.15
+    #         script: |
+    #           #!/usr/bin/env zsh
+    #           cat $(workspaces.source.path)/README.md

@@ -11,6 +11,10 @@ spec:
         claimName: storage-code
   params:
     - name: repo-url
-      value: https://github.com/tektoncd/pipeline.git
+      value: https://github.com/zheng11581/mall-swarm.git
     - name: branch-name
-      value: release-v0.12.x
+      value: master
+    - name: context
+      value: mall-swarm/mall-admin
+    - name: image
+      value: goharbor.com/mall-swarm/mall-admin
