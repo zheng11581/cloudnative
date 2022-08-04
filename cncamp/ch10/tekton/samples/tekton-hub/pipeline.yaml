@@ -35,20 +35,20 @@ spec:
         This workspace will receive the cloned git repo and be passed
         to the next Task for the repo's README.md file to be read.
   tasks:
-    - name: fetch-repo
-      taskRef:
-        name: git-clone
-      workspaces:
-        - name: output
-          workspace: shared-data
-      params:
-        - name: url
-          value: $(params.repo-url)
-        - name: revision
-          value: $(params.branch-name)
+    # - name: fetch-repo
+    #   taskRef:
+    #     name: git-clone
+    #   workspaces:
+    #     - name: output
+    #       workspace: shared-data
+    #   params:
+    #     - name: url
+    #       value: $(params.repo-url)
+    #     - name: revision
+    #       value: $(params.branch-name)
 
     - name: build-image
-      runAfter: ["fetch-repo"]
+      # runAfter: ["fetch-repo"]
       taskRef:
         name: kaniko
       workspaces:
