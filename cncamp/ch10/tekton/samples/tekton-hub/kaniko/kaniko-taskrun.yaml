@@ -9,13 +9,11 @@ spec:
     - name: source
       persistentVolumeClaim:
         claimName: storage-code
+    - name: dockerconfig
+      secret:
+        secretName: default-token-zm6dl
   params:
     - name: CONTEXT
       value: mall-admin
     - name: IMAGE
-      value: goharbor.com/mall-swarm
-    - name: IMAGE_URL
-      value: mall-admin
-  # - name: dockerconfig
-  #   secret:
-  #     secretName: my-secret
+      value: goharbor.com/mall-swarm/mall-admin
