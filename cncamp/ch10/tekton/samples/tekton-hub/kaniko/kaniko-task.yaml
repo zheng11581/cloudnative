@@ -21,7 +21,7 @@ spec:
         sleep 600
     - name: build-image
       image: cncamp/executor
-      workingDir: ${params.CONTEXT}
+      workingDir: $(workspaces.source.path)/$(params.CONTEXT)
       args:
         - "--dockerfile=${params.DOCKERFILE}"
         - "--context=$(workspaces.source.path)/$(params.CONTEXT)"
