@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: fetch-repo
+spec:
+  taskRef:
+    name: git-clone
+  workspaces:
+    - name: shared-data
+      persistentVolumeClaim:
+        claimName: storage-code
+  params:
+    - name: repo-url
+      value: https://github.com/zheng11581/mall-swarm.git
+    - name: branch-name
+      value: master
