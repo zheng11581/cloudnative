@@ -11,12 +11,17 @@ spec:
       description: Path to the Dockerfile to build.
       default: ./mall-admin/Dockerfile
   steps:
+    - name: sleep
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        sleep 600
     - name: build-image
-      image: gcr.io/kaniko-project/executor:v1.5.1
+      image: cncamp/executor
       workingDir: /workspace/source
       args:
         - "--dockerfile=./mall-admin/Dockerfile"
-        - "--context=./mall-admin"
+        - "--context=/workspace/source"
         - "--destination=goharbor.com/mall-swarm/mall-admin:latest"
   workspaces:
     - name: dockerconfig
@@ -24,4 +29,4 @@ spec:
       optional: true
       mountPath: /kaniko/.docker
     - name: source
-      description: Holds the context and Dockerfile
+      description: source code storage
