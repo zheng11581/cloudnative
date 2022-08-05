@@ -22,10 +22,10 @@ spec:
       type: string
       description: The git branch to clone.
 
-    - name: context
+    - name: dockerfile
       type: string
       description: The code module path.
-    - name: image
+    - name: dockerimage
       type: string
       description: The build image.
 
@@ -35,41 +35,41 @@ spec:
         This workspace will receive the cloned git repo and be passed
         to the next Task for the repo's README.md file to be read.
   tasks:
-    # - name: fetch-repo
-    #   taskRef:
-    #     name: git-clone
-    #   workspaces:
-    #     - name: output
-    #       workspace: shared-data
-    #   params:
-    #     - name: url
-    #       value: $(params.repo-url)
-    #     - name: revision
-    #       value: $(params.branch-name)
+    - name: fetch-repo
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.branch-name)
 
     - name: build-image
-      # runAfter: ["fetch-repo"]
+      runAfter: ["fetch-repo"]
       taskRef:
-        name: kaniko
+        name: kaniko-build
       workspaces:
         - name: source
           workspace: shared-data
       params:
-        - name: CONTEXT
-          value: $(params.context)
+        - name: DOCKERFILE
+          value: $(params.dockerfile)
         - name: IMAGE
-          value: $(params.image)
+          value: $(params.dockerimage)
 
-    - name: sleep
-      runAfter: ["build-image"] # Wait until the clone is done before reading the readme.
-      workspaces:
-        - name: source
-          workspace: shared-data
-      taskSpec:
-        workspaces:
-          - name: source
-        steps:
-          - image: ubuntu
-            script: |
-              #!/usr/bin/env bash
-              sleep 600
+    # - name: sleep
+    #   runAfter: ["build-image"] # Wait until the clone is done before reading the readme.
+    #   workspaces:
+    #     - name: source
+    #       workspace: shared-data
+    #   taskSpec:
+    #     workspaces:
+    #       - name: source
+    #     steps:
+    #       - image: ubuntu
+    #         script: |
+    #           #!/usr/bin/env bash
+    #           sleep 600
