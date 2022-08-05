@@ -6,7 +6,7 @@ spec:
   taskRef:
     name: git-clone
   workspaces:
-    - name: shared-data
+    - name: output
       persistentVolumeClaim:
         claimName: storage-code
   params:
