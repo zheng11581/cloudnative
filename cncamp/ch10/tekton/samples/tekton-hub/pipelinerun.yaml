@@ -16,5 +16,7 @@ spec:
       value: master
     - name: dockerfile
       value: ./mall-admin/Dockerfile
-    - name: image
+    - name: dockerimage
       value: goharbor.com/mall-swarm/mall-admin
+    - name: context
+      value: /workspace/source
