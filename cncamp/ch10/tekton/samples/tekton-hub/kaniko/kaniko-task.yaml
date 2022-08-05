@@ -10,6 +10,9 @@ spec:
     - name: DOCKERFILE
       description: Path to the Dockerfile to build.
       default: ./mall-admin/Dockerfile
+    - name: CONTEXT
+      description: Path to hold dockerfile.
+      default: /workspace/source
   steps:
     - name: sleep
       image: ubuntu
@@ -18,10 +21,10 @@ spec:
         sleep 600
     - name: build-image
       image: cncamp/executor
-      workingDir: /workspace/source
+      workingDir: ${params.CONTEXT}
       args:
         - "--dockerfile=${params.DOCKERFILE}"
-        - "--context=/workspace/source"
+        - "--context=${params.CONTEXT}"
         - "--destination=${params.IMAGE}"
   workspaces:
     - name: dockerconfig

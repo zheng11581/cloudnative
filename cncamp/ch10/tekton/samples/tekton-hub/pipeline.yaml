@@ -24,10 +24,13 @@ spec:
 
     - name: dockerfile
       type: string
-      description: The code module path.
+      description: The dockerfile path.
     - name: dockerimage
       type: string
       description: The build image.
+    - name: context
+      type: string
+      description: The code module path.
 
   workspaces:
     - name: shared-data
@@ -59,6 +62,8 @@ spec:
           value: $(params.dockerfile)
         - name: IMAGE
           value: $(params.dockerimage)
+        - name: CONTEXT
+          value: $(params.context)
 
     # - name: sleep
     #   runAfter: ["build-image"] # Wait until the clone is done before reading the readme.

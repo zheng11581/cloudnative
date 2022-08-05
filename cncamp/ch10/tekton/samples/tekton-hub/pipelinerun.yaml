@@ -14,7 +14,7 @@ spec:
       value: https://github.com/zheng11581/mall-swarm.git
     - name: branch-name
       value: master
-    - name: context
-      value: mall-admin
+    - name: dockerfile
+      value: ./mall-admin/Dockerfile
     - name: image
       value: goharbor.com/mall-swarm/mall-admin
