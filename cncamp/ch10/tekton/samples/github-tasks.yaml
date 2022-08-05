@@ -10,23 +10,21 @@ spec:
     - name: DOCKERFILE
       description: Path to the Dockerfile to build.
       default: ./httpserver/Dockerfile
-  resources:
-    inputs:
-      - name: repo
-        type: git
   steps:
     - name: github-build
       image: cncamp/executor
-      workingDir: /workspace/repo
+      workingDir: /workspace/source
       args:
         - "--dockerfile=./httpserver/Dockerfile"
         - "--context=./httpserver"
-        - "--destination=cncamp/httpserver:v1.0"
+        - "--destination=cncamp/httpserver:20220805"
   workspaces:
     - name: dockerconfig
       description: Includes a docker `config.json`
       optional: true
       mountPath: /kaniko/.docker
+    - name: source
+      description: source code storage
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
@@ -36,12 +34,10 @@ spec:
   serviceAccountName: cncamp-sa
   taskRef:
     name: github-build
-  resources:
-    inputs:
-      - name: repo
-        resourceRef:
-          name: cncamp-golang
   workspaces:
+    - name: source
+      persistentVolumeClaim:
+        claimName: storage-code
     - name: dockerconfig
       secret:
         secretName: docker-auth
