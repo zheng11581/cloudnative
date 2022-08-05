@@ -10,7 +10,7 @@ spec:
       persistentVolumeClaim:
         claimName: storage-code
   params:
-    - name: repo-url
+    - name: url
       value: https://github.com/zheng11581/mall-swarm.git
-    - name: branch-name
+    - name: revision
       value: master
