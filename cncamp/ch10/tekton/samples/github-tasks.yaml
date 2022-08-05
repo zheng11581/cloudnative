@@ -6,17 +6,17 @@ spec:
   params:
     - name: IMAGE
       description: Name (reference) of the image to build.
-      default: cncamp/httpserver:v1.0
+      default: goharbor.com/mall-swarm/mall-admin:latest
     - name: DOCKERFILE
       description: Path to the Dockerfile to build.
-      default: ./httpserver/Dockerfile
+      default: ./mall-admin/Dockerfile
   steps:
     - name: github-build
       image: cncamp/executor
       workingDir: /workspace/source
       args:
         - "--dockerfile=./mall-admin/Dockerfile"
-        - "--context=./mall-admin"
+        - "--context=/workspace/source"
         - "--destination=goharbor.com/mall-swarm/mall-admin:latest"
   workspaces:
     - name: dockerconfig
