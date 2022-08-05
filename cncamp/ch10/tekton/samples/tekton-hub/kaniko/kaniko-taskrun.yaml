@@ -12,3 +12,5 @@ spec:
   params:
     - name: IMAGE
       value: goharbor.com/mall-swarm/mall-admin
+    - name: DOCKERFILE
+      value: ./mall-admin/Dockerfile

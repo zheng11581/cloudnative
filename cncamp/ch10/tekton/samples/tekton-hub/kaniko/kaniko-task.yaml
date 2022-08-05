@@ -20,9 +20,9 @@ spec:
       image: cncamp/executor
       workingDir: /workspace/source
       args:
-        - "--dockerfile=./mall-admin/Dockerfile"
+        - "--dockerfile=${params.DOCKERFILE}"
         - "--context=/workspace/source"
-        - "--destination=goharbor.com/mall-swarm/mall-admin:latest"
+        - "--destination=${params.IMAGE}"
   workspaces:
     - name: dockerconfig
       description: Includes a docker `config.json`
