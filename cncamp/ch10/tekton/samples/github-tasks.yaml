@@ -15,9 +15,9 @@ spec:
       image: cncamp/executor
       workingDir: /workspace/source
       args:
-        - "--dockerfile=./httpserver/Dockerfile"
-        - "--context=./httpserver"
-        - "--destination=cncamp/httpserver:20220805"
+        - "--dockerfile=./mall-admin/Dockerfile"
+        - "--context=./mall-admin"
+        - "--destination=goharbor.com/mall-swarm/mall-admin:latest"
   workspaces:
     - name: dockerconfig
       description: Includes a docker `config.json`
