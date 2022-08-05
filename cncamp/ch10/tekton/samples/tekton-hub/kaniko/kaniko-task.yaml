@@ -9,10 +9,10 @@ spec:
       default: goharbor.com/mall-swarm/mall-admin
     - name: DOCKERFILE
       description: Path to the Dockerfile to build.
-      default: ./mall-admin/Dockerfile
+      default: ./Dockerfile
     - name: CONTEXT
       description: Path to hold dockerfile.
-      default: /workspace/source
+      default: mall-admin
   steps:
     - name: sleep
       image: ubuntu
@@ -24,7 +24,7 @@ spec:
       workingDir: ${params.CONTEXT}
       args:
         - "--dockerfile=${params.DOCKERFILE}"
-        - "--context=${params.CONTEXT}"
+        - "--context=$(workspaces.source.path)/$(params.CONTEXT)"
         - "--destination=${params.IMAGE}"
   workspaces:
     - name: dockerconfig
