@@ -11,6 +11,11 @@ spec:
       description: Path to the Dockerfile to build.
       default: ./mall-admin/Dockerfile
   steps:
+    - name: sleep
+      image: ubuntu
+      script: |
+        #!/usr/bin/env bash
+        sleep 600
     - name: github-build
       image: cncamp/executor
       workingDir: /workspace/source
