@@ -50,8 +50,23 @@ spec:
         - name: revision
           value: $(params.branch-name)
 
+    - name: sleep
+      runAfter: ["git-clone"] # Wait until the clone is done before reading the readme.
+      workspaces:
+        - name: source
+          workspace: shared-data
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - image: ubuntu
+            script: |
+              #!/usr/bin/env bash
+              sleep 600
+        
+
     - name: build-image
-      runAfter: ["fetch-repo"]
+      runAfter: ["sleep"]
       taskRef:
         name: kaniko-build
       workspaces:
