@@ -18,13 +18,13 @@ spec:
       image: cncamp/executor
       workingDir: $(workspaces.source.path)/$(params.CONTEXT)
       args:
-        - "--dockerfile=$(workspaces.source.path)/$(params.CONTEXT)/${params.DOCKERFILE}"
+        - "--dockerfile=$(workspaces.source.path)/$(params.CONTEXT)/$(params.DOCKERFILE)"
         - "--context=$(workspaces.source.path)/$(params.CONTEXT)"
-        - "--destination=${params.IMAGE}"
+        - "--destination=$(params.IMAGE)"
   workspaces:
     - name: dockerconfig
       description: Includes a docker `config.json`
       optional: true
       mountPath: /kaniko/.docker
-    - name: source
+    - name: source+
       description: source code storage
