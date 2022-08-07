@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: storage-code
 spec:
-  storageClassName: rook-ceph-block
+  storageClassName: rook-cephfs
   accessModes:
     - ReadWriteOnce
   resources:
