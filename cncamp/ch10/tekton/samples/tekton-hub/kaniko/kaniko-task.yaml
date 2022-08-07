@@ -14,11 +14,6 @@ spec:
       description: Path to hold dockerfile.
       default: mall-admin
   steps:
-    # - name: sleep
-    #   image: ubuntu
-    #   script: |
-    #     #!/usr/bin/env bash
-    #     sleep 600
     - name: build-image
       image: cncamp/executor
       workingDir: $(workspaces.source.path)/$(params.CONTEXT)
