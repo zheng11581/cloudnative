@@ -26,5 +26,5 @@ spec:
       description: Includes a docker `config.json`
       optional: true
       mountPath: /kaniko/.docker
-    - name: source+
+    - name: source
       description: source code storage
