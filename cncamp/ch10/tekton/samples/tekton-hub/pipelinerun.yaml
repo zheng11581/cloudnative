@@ -17,6 +17,9 @@ spec:
     - name: shared-data
       persistentVolumeClaim:
         claimName: storage-code
+    - name: dockerconfig
+      secret:
+        secretName: harbor
   params:
     - name: repo-url
       value: https://github.com/zheng11581/mall-swarm.git
@@ -25,6 +28,6 @@ spec:
     - name: dockerfile
       value: Dockerfile
     - name: dockerimage
-      value: goharbor.com/mall-swarm/mall-admin
+      value: zheng11581/mall-admin
     - name: context
       value: mall-admin
