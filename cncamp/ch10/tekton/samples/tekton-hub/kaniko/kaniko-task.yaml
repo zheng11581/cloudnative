@@ -16,10 +16,10 @@ spec:
   steps:
     - name: build-image
       image: cncamp/executor
-      workingDir: $(workspaces.source.path)/$(params.CONTEXT)
+      workingDir: $(workspaces.source.path)
       args:
-        - "--dockerfile=$(workspaces.source.path)/$(params.CONTEXT)/$(params.DOCKERFILE)"
-        - "--context=$(workspaces.source.path)/$(params.CONTEXT)"
+        - "--dockerfile=./$(params.CONTEXT)/$(params.DOCKERFILE)"
+        - "--context=."
         - "--destination=$(params.IMAGE)"
       volumeMounts:
         - name: mvn-cache
