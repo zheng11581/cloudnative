@@ -19,7 +19,7 @@ spec:
         claimName: storage-code
     - name: dockerconfig
       secret:
-        secretName: harbor
+        secretName: regcred
   params:
     - name: repo-url
       value: https://github.com/zheng11581/mall-swarm.git
