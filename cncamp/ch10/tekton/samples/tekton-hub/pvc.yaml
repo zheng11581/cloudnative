@@ -9,3 +9,16 @@ spec:
   resources:
     requests:
       storage: 500Mi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mvn-cache
+spec:
+  storageClassName: rook-cephfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi

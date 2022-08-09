@@ -21,6 +21,11 @@ spec:
         - "--dockerfile=$(workspaces.source.path)/$(params.CONTEXT)/$(params.DOCKERFILE)"
         - "--context=$(workspaces.source.path)/$(params.CONTEXT)"
         - "--destination=$(params.IMAGE)"
+      volumeMounts:
+        - name: mvn-cache
+          mountPath: ~/.m2/repository
+        - name: mvn-settings
+          mountPath: ~/.m2/
   workspaces:
     - name: dockerconfig
       description: Includes a docker `config.json`

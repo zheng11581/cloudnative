@@ -5,6 +5,14 @@ metadata:
 spec:
   pipelineRef:
     name: build-image-from-source
+  podTemplate:
+    volumes:
+      - name: mvn-cache
+        persistentVolumeClaim:
+          claimName: mvn-cache
+      - name: mvn-settings
+        configmap:
+          name: maven-settings
   workspaces:
     - name: shared-data
       persistentVolumeClaim:
