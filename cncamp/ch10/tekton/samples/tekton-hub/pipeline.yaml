@@ -37,6 +37,9 @@ spec:
       description: |
         This workspace will receive the cloned git repo and be passed
         to the next Task for the repo's README.md file to be read.
+    - name: reg-cred
+      description: Includes a docker `config.json`
+      optional: true
   tasks:
     - name: fetch-repo
       taskRef:
@@ -57,6 +60,8 @@ spec:
       workspaces:
         - name: source
           workspace: shared-data
+        - name: dockerconfig
+          workspace: reg-cred
       params:
         - name: DOCKERFILE
           value: $(params.dockerfile)

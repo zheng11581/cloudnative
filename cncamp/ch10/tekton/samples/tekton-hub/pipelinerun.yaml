@@ -17,7 +17,7 @@ spec:
     - name: shared-data
       persistentVolumeClaim:
         claimName: storage-code
-    - name: dockerconfig
+    - name: reg-cred
       secret:
         secretName: regcred
   params:

@@ -30,6 +30,6 @@ spec:
     - name: dockerconfig
       description: Includes a docker `config.json`
       optional: true
-      mountPath: ~/.docker
+      mountPath: /kaniko/.docker
     - name: source
       description: source code storage
