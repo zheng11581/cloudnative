@@ -15,12 +15,14 @@ spec:
       default: mall-admin
   steps:
     - name: build-image
-      image: gcr.io/kaniko-project/executor:debug
+      image: cncamp/executor
       workingDir: $(workspaces.source.path)
       args:
         - "--dockerfile=./$(params.CONTEXT)/$(params.DOCKERFILE)"
         - "--context=."
         - "--destination=$(params.IMAGE)"
+        - "--cache=true"
+        - "--verbosity=debug"
       volumeMounts:
         - name: mvn-cache
           mountPath: ~/.m2/repository
