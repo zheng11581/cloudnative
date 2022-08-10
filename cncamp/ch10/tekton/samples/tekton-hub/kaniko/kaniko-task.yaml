@@ -21,7 +21,7 @@ spec:
         - "--dockerfile=./$(params.CONTEXT)/$(params.DOCKERFILE)"
         - "--context=."
         - "--destination=$(params.IMAGE)"
-        - "--cache=true"
+        - "--cache=false"
         - "--verbosity=debug"
       volumeMounts:
         - name: mvn-cache
