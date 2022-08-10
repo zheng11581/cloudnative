@@ -15,7 +15,7 @@ spec:
       default: mall-admin
   steps:
     - name: build-image
-      image: gcr.io/kaniko-project/executor:v1.5.1
+      image: gcr.io/kaniko-project/executor:debug
       workingDir: $(workspaces.source.path)
       args:
         - "--dockerfile=./$(params.CONTEXT)/$(params.DOCKERFILE)"
