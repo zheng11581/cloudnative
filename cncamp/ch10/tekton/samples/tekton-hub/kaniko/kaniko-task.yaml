@@ -24,6 +24,7 @@ spec:
         - "--cache=false"
         - "--verbosity=debug"
         - "--snapshotMode=time"
+        - "--single-snapshot"
       volumeMounts:
         - name: mvn-cache
           mountPath: ~/.m2/repository
