@@ -23,6 +23,7 @@ spec:
         - "--destination=$(params.IMAGE)"
         - "--cache=false"
         - "--verbosity=debug"
+        - "--snapshotMode=time"
       volumeMounts:
         - name: mvn-cache
           mountPath: ~/.m2/repository
