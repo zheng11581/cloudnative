@@ -11,6 +11,7 @@ spec:
       storage: 3Gi
 
 ---
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -22,3 +23,4 @@ spec:
   resources:
     requests:
       storage: 3Gi
+
