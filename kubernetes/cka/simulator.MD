@@ -273,9 +273,95 @@ spec:
           name: data
 ```
 
+## Question 7 | Node and Pod Resource Usage (1%)
+
+### Describe
+
+```text
+The metrics-server has been installed in the cluster. Your college would like to know the kubectl commands to:
+1. show Nodes resource usage
+2. show Pods and their containers resource usage
+Please write the commands into /opt/course/7/node.sh and /opt/course/7/pod.sh.
+```
+
+### Result
+
+```shell
+# k top node > /opt/course/7/node.sh
+# k top pod --containers=true > /opt/course/7/pod.sh
+```
 
 
 
+## Question 8 | Get Master Information (2%)
+
+### Describe
+
+```text
+Ssh into the master node with ssh cluster1-master1. Check how the master components kubelet, kube-apiserver, kube-scheduler, kube-controller-manager and etcd are started/installed on the master node. Also find out the name of the DNS application and how it's started/installed on the master node.
+
+Write your findings into file /opt/course/8/master-components.txt. The file should be structured like:
+
+# /opt/course/8/master-components.txt
+kubelet: [TYPE]
+kube-apiserver: [TYPE]
+kube-scheduler: [TYPE]
+kube-controller-manager: [TYPE]
+etcd: [TYPE]
+dns: [TYPE] [NAME]
+Choices of [TYPE] are: not-installed, process, static-pod, pod
+```
+
+### Result
+
+```shell
+# ssh cluster1-master1
+
+# ps aux | grep kubelet
+
+# find /etc/systemd/system/ | grep kube
+
+# find /etc/systemd/system/ |grep etcd
+
+# find /etc/kubernetes/manifests/
+
+# kubectl -n kube-system get pod -o wide | grep master1
+
+# vim /opt/course/8/master-components.txt
+kubelet: [process]
+kube-apiserver: [static-pod]
+kube-scheduler: [static-pod]
+kube-controller-manager: [static-pod]
+etcd: [static-pod]
+dns: [pod] [coredns]
+```
+
+
+## Question 9 | Kill Scheduler, Manual Scheduling (5%)
+
+### Describe
+
+1. Ssh into the master node with `ssh cluster2-master1`. Temporarily stop the kube-scheduler, this means in a way that you can start it again afterwards.
+
+2. Create a single Pod named `manual-schedule` of image `httpd:2.4-alpine`, confirm its created but not scheduled on any node.
+
+3. Now you're the scheduler and have all its power, manually schedule that Pod on node cluster2-master1. Make sure it's running.
+
+4. Start the kube-scheduler again and confirm its running correctly by creating a second Pod named `manual-schedule2` of image `httpd:2.4-alpine` and check if it's running on cluster2-worker1.
+
+### Result
+
+```shell
+# 1
+# ssh cluster2-master1
+# cd /etc/kunernetes/manifests/
+# mv kube-scheduler.yaml ..
+# kubectl -n kube-system get pod | grep schedule
+
+# 2 
+# k run manual-schedule --image=httpd:2.4-alpine $do > 9.yaml
+# k get pod -o |grep 
+```
 
 ## Question 1 | Contexts (1%)
 
