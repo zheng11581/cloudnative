@@ -669,7 +669,218 @@ status: {}
 
 ### Describe
 
+Create a Pod named `multi-container-playground` in Namespace `default` with three containers, named `c1`, `c2` and `c3`. 
+1. There should be a volume attached to that Pod and mounted into every container, but the volume shouldn't be persisted or shared with other Pods.
+2. Container `c1` should be of image `nginx:1.17.6-alpine` and have the name of the node where its Pod is running available as environment variable `MY_NODE_NAME`.
+3. Container `c2` should be of image `busybox:1.31.1` and write the output of the date command every second in the shared volume into file date.log. You can use `while true; do date >> /your/vol/path/date.log; sleep 1; done` for this.
+4. Container `c3` should be of image `busybox:1.31.1` and constantly send the content of file date.log from the shared volume to stdout. You can use `tail -f /your/vol/path/date.log` for this.
+5. Check the logs of container c3 to confirm correct setup.
+
 ### Result
+
+```shell
+# k run multi-container-playground --image=nginx:1.17.6-alpine $do > 13.yaml
+# vi 13.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: multi-container-playground
+  name: multi-container-playground
+spec:
+  volumes:                         # add
+  - name: share-data               # add
+    hostPath:   # add
+      path: /tmp/share-data        # add
+  containers:
+  - image: nginx:1.17.6-alpine
+    name: c1                       # change
+    volumeMounts:                  # add
+    - name: share-data             # add
+      mountPath: /tmp/share-data   # add
+  - image: busybox:1.31.1          # add below
+    name: c2
+    command:
+    - sh
+    - -c
+    - "while true; do date >> /tmp/share-data/date.log; sleep 1; done"
+    volumeMounts:   
+    - name: share-data    
+      mountPath: /tmp/share-data    
+  - image: busybox:1.31.1          # add below
+    name: c3
+    command:
+    - sh
+    - -c
+    - "tail -f /tmp/share-data/date.log"
+    volumeMounts:
+    - name: share-data
+      mountPath: /tmp/share-data
+  restartPolicy: Always
+# status: {}                      # delete
+
+# k create -f 13.yaml
+# k get pod multi-container-playground -w 
+# k logs -f multi-container-playground -c c3
+
+```
+
+
+## Question 14 | Find out Cluster Information (2%)
+
+### Describe
+
+You're ask to find out following information about the cluster `k8s-c1-H`:
+
+1. How many master nodes are available?
+2. How many worker nodes are available?
+3. What is the Service CIDR?
+4. Which Networking (or CNI Plugin) is configured and where is its config file?
+5. Which suffix will static pods have that run on `cluster1-worker1`?
+
+Write your answers into file /opt/course/14/cluster-info, structured like this:
+# /opt/course/14/cluster-info
+1: [ANSWER]
+2: [ANSWER]
+3: [ANSWER]
+4: [ANSWER]
+5: [ANSWER]
+
+### Result
+
+```shell
+# 1、2
+# k get node
+
+# 3、4
+# ssh master
+# cat /etc/kubernetes/manifests/kube-apiserver.yaml |grep range
+# find /etc/cni/net.d/
+# cat /etc/cni/net.d/10-calico.conflist
+
+# 5
+# suffix is cluster1-worker1
+```
+
+## Question 15 | Cluster Event Logging (3%)
+
+### Describe
+
+1. Write a command into `/opt/course/15/cluster_events.sh` which shows the latest events in the whole cluster, ordered by time. Use kubectl for it.
+2. Now kill the kube-proxy Pod running on node cluster2-worker1 and write the events this caused into `/opt/course/15/pod_kill.log`.
+3. Finally kill the containerd container of the kube-proxy Pod on node cluster2-worker1 and write the events into `/opt/course/15/container_kill.log`.
+
+Do you notice differences in the events both actions caused?
+
+### Result
+
+```shell
+# 1
+# echo "kubectl get events -A --sort-by=.metadata.creationTimestamp" > /opt/course/15/cluster_events.sh
+
+# 2
+# k get pod -n kube-system -owide |grep kube-proxy
+# k delete pod -n kube-system <kube-proxy-node>
+# sh /opt/course/15/cluster_events.sh 
+
+# 3
+# ssh <kube-proxy-node>
+# crictl ps |grep kube-proxy
+# crictl rm <container-id>
+# crictl ps |grep kube-proxy
+# sh /opt/course/15/cluster_events.sh 
+
+
+```
+
+## Question 16 | Namespaces and Api Resources (2%)
+
+### Describe
+
+1. Create a new Namespace called `cka-master`.
+2. Write the names of all namespaced Kubernetes resources (like Pod, Secret, ConfigMap...) into `/opt/course/16/resources.txt`.
+3. Find the `project-*` Namespace with the highest number of Roles defined in it and write its name and amount of Roles into `/opt/course/16/crowded-namespace`.txt.
+
+### Result
+
+```shell
+# 1
+# k create ns cka-master
+
+# 2
+# k api-resources --namespaced --no-headers -o name > /opt/course/16/resources.txt
+
+# 3
+# k get ns |grep "project-"
+# k get role -n <project-ns> --no-headers |wc -l
+```
+
+
+## Question 17 | Find Container of Pod and check info (3%)
+
+### Describe
+
+1. In Namespace `project-tiger` create a Pod named `tigers-reunite` of image `httpd:2.4.41-alpine` with labels `pod=container` and `container=pod`. 
+2. Find out on which node the Pod is scheduled. 
+3. Ssh into that node and find the containerd container belonging to that Pod.
+
+Using command crictl:
+4. Write the ID of the container and the info.runtimeType into `/opt/course/17/pod-container.txt`
+5. Write the logs of the container into `/opt/course/17/pod-container.log`
+
+### Result
+
+```shell
+# 1
+# k run tigers-reunite -n project-tiger --image=httpd:2.4.41-alpine --labels="pod=container,container=pod" $do > 17.yaml
+# k create -f 17.yaml
+
+# 2
+# k get pod -n project-tiger tigers-reunite -owide
+
+# 3、4、5
+# ssh <node>
+# crictl ps |grep tigers-reunite
+# crictl inspect <container-id> |grep runtimeType
+# crictl logs <container-id>
+```
+
+## Question 18 | Fix Kubelet (8%)
+
+### Describe
+
+1. There seems to be an issue with the kubelet not running on `cluster3-worker1`. Fix it and confirm that cluster has node `cluster3-worker1` available in Ready state afterwards. 
+2. You should be able to schedule a Pod on cluster3-worker1 afterwards.
+3. Write the reason of the issue into /opt/course/18/reason.txt.
+
+### Result
+
+```shell
+# 1
+# ssh cluster3-worker1
+# ps -ef |grep kubelet
+# systemctl start kubelet
+# systemctl status kubelet
+# Maybe show "kubelet.service: Failed at step EXEC spawning /usr/local/bin/kubelet: No such file or directory" 
+# whereis kubelet
+# vim /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+# Modify the kubelet path
+```
+
+## Question 19 | Create Secret and mount into Pod (3%)
+
+### Describe
+
+1. Do the following in a new Namespace `secret`. 
+2. Create a Pod named `secret-pod` of image `busybox:1.31.1` which should keep running for some time.
+3. There is an existing Secret located at `/opt/course/19/secret1.yaml`, create it in the Namespace `secret` and mount it readonly into the Pod at `/tmp/secret1`.
+4. Create a new Secret in Namespace `secret` called `secret2` which should contain `user=user1` and `pass=1234`. 
+5. These entries should be available inside the Pod's container as environment variables `APP_USER` and `APP_PASS`.
+6. Confirm everything is working.
+
+### Result
+
 
 
 ## Question 1 | Contexts (1%)
