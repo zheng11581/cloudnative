@@ -881,7 +881,212 @@ Using command crictl:
 
 ### Result
 
+```shell
+# 1
+# k create ns secret
 
+# 2
+# k run secret-pod -n secret --image=busybox:1.31.1 $do --command -- sleep 3600
+# k create -f 19.yaml
+
+# 3 
+# vim /opt/course/19/secret1.yaml
+# change namespace
+# vim 19.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: secret-pod
+  name: secret-pod
+  namespace: secret
+spec:
+  volumes:                # Add
+  - name: shared          # Add
+    secret:               # Add
+      secretName: secret1 # Add
+      optional: false     # Add 
+  containers:
+  - command:
+    - sleep
+    - "3600"
+    image: busybox:1.31.1
+    name: secret-pod
+    volumeMounts:         # Add
+    - name: shared        # Add
+      path: /tmp/secret1  # Add
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+# k replace -f 19.yaml --force
+
+# 4、5 
+# vim 19.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: secret-pod
+  name: secret-pod
+  namespace: secret
+spec:
+  volumes:
+  - name: shared
+    secret:
+      secretName: secret1
+      optional: false
+  containers:
+  - command:
+    - sleep
+    - "3600"
+    image: busybox:1.31.1
+    name: secret-pod
+    volumeMounts:
+    - name: shared
+      path: /tmp/secret1
+    env:              # Add below
+    - name: APP_USER
+      valueFrom:
+        secretKeyRef:
+          name: secret2
+          key: user
+    - name: APP_PASS
+      valueFrom:
+        secretKeyRef:
+          name: secret2
+          key: pass
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1    # Add below
+data:
+  user: dXNlcjEK
+  pass: MTIzNAo
+kind: Secret
+metadata:
+  name: secret2
+  namespace: secret
+type: Opaque
+
+# k apply -f 19.yaml
+```
+
+
+## Question 20 | Update Kubernetes Version and join cluster (10%)
+
+### Describe
+
+Your coworker said node `cluster3-worker2` is running an older Kubernetes version and is not even part of the cluster. 
+1. Update Kubernetes on that node to the exact version that's running on `cluster3-master1`.
+2. Then add this node to the cluster. Use kubeadm for this.
+
+### Result
+
+```shell
+
+# k get node
+# kubernetes == v1.24.1
+# ssh cluster3-worker2
+
+# 1
+# kubeadm version
+# kubectl version
+# kubelet --version
+
+# If kubeadm <> v1.24.1
+apt update
+apt-cache madison kubeadm
+
+apt-mark unhold kubeadm && \
+apt-get update && apt-get install -y kubeadm=1.24.1-00 && \
+apt-mark hold kubeadm
+
+kubeadm upgrade plan
+
+# 2
+# If already joined cluster
+kubeadm upgrade node v1.24.1
+
+# If not joined cluster\
+# If kubectl or kubelet <> v1.24.1
+apt-mark unhold kubectl kubelet && \
+apt-get update && apt-get install -y kubectl=1.24.1-00 kubelet=1.24.1-00 && \
+apt-mark hold kubectl kubelet
+
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+kubeadm token create --print-join-command
+# and the use the command join cluster
+
+
+```
+
+## Question 21 | Create a Static Pod and Service (2%)
+
+### Describe
+
+1. Create a Static Pod named `my-static-pod` in Namespace `default` on `cluster3-master1`. It should be of image `nginx:1.16-alpine` and have resource `requests` for 10m CPU and 20Mi memory.
+
+2. Then create a NodePort Service named `static-pod-service` which exposes that static Pod on port 80 and check if it has Endpoints and if its reachable through the cluster3-master1 internal IP address. You can connect to the internal node IPs from your main terminal.
+
+### Result
+
+```shell
+
+# 1
+# k run my-static-pod --image=nginx:1.16-alpine $do > 21.yaml
+# vim 21.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: my-static-pod
+  name: my-static-pod
+spec:
+  containers:
+  - image: nginx:1.16-alpine
+    name: my-static-pod
+    resources: 
+      requests:
+        cpu: "10m"
+        memory: 20Mi
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+# 2 
+# k expose pod my-static-pod-cluster3-master1 --name=static-pod-service --type=nodeport --port=80 $do >> 21.yaml
+# k get ep -w
+
+```
+
+## Question 1 | Contexts (1%)
+
+### Describe
+
+### Result
+
+## Question 1 | Contexts (1%)
+
+### Describe
+
+### Result
+
+## Question 1 | Contexts (1%)
+
+### Describe
+
+### Result
 
 ## Question 1 | Contexts (1%)
 
