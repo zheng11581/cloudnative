@@ -1036,15 +1036,16 @@ kubeadm token create --print-join-command
 
 1. Create a Static Pod named `my-static-pod` in Namespace `default` on `cluster3-master1`. It should be of image `nginx:1.16-alpine` and have resource `requests` for 10m CPU and 20Mi memory.
 
-2. Then create a NodePort Service named `static-pod-service` which exposes that static Pod on port 80 and check if it has Endpoints and if its reachable through the cluster3-master1 internal IP address. You can connect to the internal node IPs from your main terminal.
+2. Then create a NodePort Service named `static-pod-service` which exposes that static Pod on port 80 and check if it has Endpoints and if its reachable through the `cluster3-master1` internal IP address. You can connect to the internal node IPs from your main terminal.
 
 ### Result
 
 ```shell
 
 # 1
-# k run my-static-pod --image=nginx:1.16-alpine $do > 21.yaml
-# vim 21.yaml
+# k run my-static-pod --image=nginx:1.16-alpine $do > 21-pod.yaml
+# vim 21-pod.yaml
+# cp 21-pod.yaml /etc/kubernetes/manifests/
 apiVersion: v1
 kind: Pod
 metadata:
@@ -1063,33 +1064,171 @@ spec:
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
----
+
 # 2 
-# k expose pod my-static-pod-cluster3-master1 --name=static-pod-service --type=nodeport --port=80 $do >> 21.yaml
+# k expose pod my-static-pod-cluster3-master1 --name=static-pod-service --type=nodeport --port=80 $do > 21-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: my-static-pod
+  name: static-pod-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: my-static-pod
+  type: nodeport
+status:
+  loadBalancer: {}
+
+# k create -f 21-svc.yaml
+# k get svc static-pod-service 
 # k get ep -w
+# curl <CLUSTER-IP>:80
+# curl <NODE-IP>:<NODE-PORT>
 
 ```
 
-## Question 1 | Contexts (1%)
+## Question 22 | Check how long certificates are valid (2%)
 
 ### Describe
 
+1. Check how long the kube-apiserver server certificate is valid on `cluster2-master1`. Do this with openssl or cfssl. Write the exipiration date into /opt/course/22/expiration.
+2. Also run the correct `kubeadm` command to list the expiration dates and confirm both methods show the same date.
+3. Write the correct kubeadm command that would renew the apiserver server certificate into `/opt/course/22/kubeadm-renew-certs.sh`.
+
 ### Result
 
-## Question 1 | Contexts (1%)
+```shell
+# 1
+# find /etc/kubernetes/pki/ |grep apiserver
+# openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt |grep Validity -A2
+
+# 2
+# kubeadm certs check-expiration |grep apiserver
+
+# 3
+# kubeadm certs renew apiserver
+# echo "kubeadm certs renew apiserver" > /opt/course/22/kubeadm-renew-certs.sh
+```
+
+## Question 23 | Kubelet client/server cert info (2%)
 
 ### Describe
 
+Node `cluster2-worker1` has been added to the cluster using kubeadm and TLS bootstrapping.
+
+1. Find the "Issuer" and "Extended Key Usage" values of the `cluster2-worker1`:
+
+- kubelet client certificate, the one used for outgoing connections to the kube-apiserver.
+- kubelet server certificate, the one used for incoming connections from the kube-apiserver.
+- Write the information into file /opt/course/23/certificate-info.txt.
+
+Compare the "Issuer" and "Extended Key Usage" fields of both certificates and make sense of these.
+
 ### Result
 
-## Question 1 | Contexts (1%)
+```shell
+# 1
+# ssh cluster2-worker1
+# client certificate
+# openssl x509  -noout -text -in /var/lib/kubelet/pki/kubelet-client-current.pem | grep Issuer
+# openssl x509  -noout -text -in /var/lib/kubelet/pki/kubelet-client-current.pem | grep "Extended Key Usage" -A1
+
+# server certificate
+# openssl x509  -noout -text -in /var/lib/kubelet/pki/kubelet.crt | grep Issuer
+# openssl x509  -noout -text -in /var/lib/kubelet/pki/kubelet.crt | grep "Extended Key Usage" -A1
+```
+
+## Question 24 | NetworkPolicy (9%)
 
 ### Describe
 
+There was a security incident where an intruder was able to access the whole cluster from a single hacked backend Pod.
+
+To prevent this create a NetworkPolicy called `np-backend` in Namespace `project-snake`. It should `allow` the `backend-*` Pods only to:
+
+connect to `db1-*` Pods on port `1111`
+connect to `db2-*` Pods on port `2222`
+Use the app label of Pods in your policy.
+
+After implementation, connections from `backend-*` Pods to `vault-*` Pods on port `3333` should for example no longer work.
+
 ### Result
 
-## Question 1 | Contexts (1%)
+```shell
+# 1. Show pods in project-snake
+# k -n project-snake get pod -L app
+
+# k -n project-snake exec backend-0 -- curl -s 10.44.0.25:1111  OK
+# k -n project-snake exec backend-0 -- curl -s 10.44.0.23:2222  OK
+# k -n project-snake exec backend-0 -- curl -s 10.44.0.22:3333  OK
+
+# vim 24-np.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: np-backend
+  namespace: project-snake
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+      matchLabels:
+        app: db1
+    ports:
+    - protocol: TCP
+      port: 1111
+  - to:
+    - podSelector:
+        matchLabels:
+          app: db2
+    ports:
+    - protocol: TCP
+      port: 2222
+
+# k create -f 24-mp.yaml
+# k -n project-snake exec backend-0 -- curl -s 10.44.0.22:3333  Failed
+
+```
+
+
+## Question 25 | Etcd Snapshot Save and Restore (8%)
 
 ### Describe
 
+1. Make a backup of etcd running on cluster3-master1 and save it on the master node at `/tmp/etcd-backup.db`.
+2. Then create a Pod of your kind in the cluster.
+3. Finally restore the backup, confirm the cluster is still working and that the created Pod is no longer with us.
+
 ### Result
+
+```shell
+# 1
+# find /etc/kubernetes/pki/etcd 
+# etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /tmp/etcd-backup.db
+# alias etcdcmd="etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key"
+
+# 2
+# k run pod-demo --image=nginx:1.17.6-alpine
+
+# 3
+# etcdcmd snapshot restore /tmp/etcd-backup.db --data-dir=/var/lib/etcd-20220902
+# cd /etc/kubernetes/manifests/
+# mv etcd.yaml ../
+# crictl ps |grep etcd
+# vim ../etcd.yaml 
+  - hostPath:
+      path: /var/lib/etcd-20220902    # change
+      type: DirectoryOrCreate
+    name: etcd-data
+```
