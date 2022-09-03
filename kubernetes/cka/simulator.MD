@@ -93,7 +93,7 @@ status: {}
 
 ```
 
-## Question 4 | Pod Ready if Service is reachable
+## Question 4 | Pod Ready if Service is reachable (4%)
 
 ### Describe
 
@@ -331,11 +331,11 @@ dns: [pod] [coredns]
 
 2. Create a single Pod named `manual-schedule` of image `httpd:2.4-alpine`, confirm its created but not scheduled on any node.
 
-3. Now you're the scheduler and have all its power, manually schedule that Pod on node cluster2-master1. Make sure it's running.
+3. Now you're the scheduler and have all its power, manually schedule that Pod on node `cluster2-master1`. Make sure it's running.
 
 4. Start the kube-scheduler again and confirm its running correctly by 
 
-5. creating a second Pod named `manual-schedule2` of image `httpd:2.4-alpine` and check if it's running on cluster2-worker1.
+5. creating a second Pod named `manual-schedule2` of image `httpd:2.4-alpine` and check if it's running on `cluster2-worker1`.
 
 ### Result
 
@@ -372,7 +372,7 @@ dns: [pod] [coredns]
 
 1. Create a new ServiceAccount `processor` in Namespace `project-hamster`. 
 2. Create a Role and RoleBinding, both named `processor` as well. 
-3. hese should allow the new SA to only create Secrets and ConfigMaps in that Namespace.
+3. these should allow the new SA to only create Secrets and ConfigMaps in that Namespace.
 
 ### Result
 
@@ -1206,7 +1206,7 @@ spec:
 
 ### Describe
 
-1. Make a backup of etcd running on cluster3-master1 and save it on the master node at `/tmp/etcd-backup.db`.
+1. Make a backup of etcd running on `cluster3-master1` and save it on the master node at `/tmp/etcd-backup.db`.
 2. Then create a Pod of your kind in the cluster.
 3. Finally restore the backup, confirm the cluster is still working and that the created Pod is no longer with us.
 
