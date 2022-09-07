@@ -1,0 +1,90 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: yapi
+  name: yapi
+spec:
+  selector:
+    matchLabels:
+      app: yapi
+  template:
+    metadata:
+      labels:
+        app: yapi
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: jayfong/yapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          name: yapi
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "200Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          env:
+            #管理员账号,禁止注册,默认密码： ymfe.org 登录请修改
+            - name: YAPI_ADMIN_ACCOUNT
+              value: "admin@qq.com"
+            - name: YAPI_ADMIN_PASSWORD
+              value: "admin123"
+            - name: YAPI_CLOSE_REGISTER
+              value: "true"
+            #mongodb 配置
+            - name: YAPI_DB_SERVERNAME
+              value: "mongo.default.svc.cluster.local"
+            - name: YAPI_DB_PORT
+              value: "27017"
+            - name: YAPI_DB_DATABASE
+              value: "yapi"
+            - name: YAPI_DB_USER
+              value: "yapi"
+            - name: YAPI_DB_PASS
+              value: "admin.yapi"
+            - name: YAPI_DB_AUTH_SOURCE
+              value: "admin"
+            #mail 邮件功能
+            - name: YAPI_MAIL_ENABLE
+              value: "true"
+            - name: YAPI_MAIL_HOST
+              value: "smtp.exmail.qq.com"
+            - name: YAPI_MAIL_PORT
+              value: "465"
+            - name: YAPI_MAIL_FROM
+              value: "admin@qq.com"
+            - name: YAPI_MAIL_AUTH_USER
+              value: "xxx"
+            - name: YAPI_MAIL_AUTH_PASS
+              value: "xxx"
+            #ldap 功能
+            - name: YAPI_LDAP_LOGIN_ENABLE
+              value: "false"
+      initContainers:
+        - name: init-mongo
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup mongo; do echo waiting for mongo; sleep 2; done;",
+            ]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yapi
+spec:
+  type: NodePort
+  selector:
+    app: yapi
+  ports:
+    - protocol: TCP
+      port: 3000
+      nodePort: 30000
