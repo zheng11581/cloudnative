@@ -65,6 +65,10 @@ touch: /tmp/test: Permission denied
 command terminated with exit code 1
 ```
 
+### Note
+
+
+
 
 ## 2. Kube-bench
 
@@ -72,26 +76,49 @@ command terminated with exit code 1
 ACIS Benchmark tool was run against the kubeadm-created cluster and found multiple issues that must be addressed immediately.
 
 Fix all issues via configuration and restart theaffected components to ensure the new settings take effect.
-Fix all of the following violations that were found against the API server:
+1. Fix all of the following violations that were found against the API server:
 - Ensure that the 1.2.7 --authorization-mode FAIL argument is not set to AlwaysAllow
 - Ensure that the 1.2.8 --authorization-mode FAIL argument includes Node
 - Ensure that the 1.2.9 --authorization-mode FAIL argument includes RBAC
 - Ensure that the 1.2.18 --insecure-bind-address FAIL argument is not set
 - Ensure that the 1.2.19 --insecure-port FAIL argument is set to 0
 
+2. Fix all of the following violations that were found against the kubelet:
+- Ensure that the 4.2.1 anonymous-auth FAIL argument is set to false
+- Ensure that the 4.2.2 --authorization-mode FAIL argument is not set to AlwaysAllow. Use webhook authn/authz where possible.
+
+3. Fix all of the following violations that were found against etcd:
+- Ensure that the 4.2.1 --client-cert-auth FAIL argument is set to true
 
 ### Answer
 
 ```shell
-# ctr i pull docker.io/aquasec/kube-bench:latest
-# ctr c create --mount type=bind,src=`pwd`,dst=/host,options=rbind:ro docker.io/aquasec/kube-bench:latest install ./kube-bench cks-master
-# docker run --rm -v `pwd`:/host aquasec/kube-bench:latest install ./kube-bench cks-master
+# docker run --rm -v `pwd`:/host aquasec/kube-bench:latest install 
+# ./kube-bench master
 
+# 1 
 # cat /etc/kubenetes/manifest/kube-apiserver.yaml |egrep "authorization-mode|insecure-bind-address|insecure-port"
 # vim /etc/kubenetes/manifest/kube-apiserver.yaml
 - --authorization-mode=Node,RBAC
 - --insecure-port
 # delete --insecure-bind-address
 
+# 2
+# vim /var/lib/kubelet/config.yaml
+authentication:
+  anonymous:
+    enabled: false
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 0s
+    cacheUnauthorizedTTL: 0s
+
+# 3
+# vim /etc/kubernetes/manifests/etcd.yaml
+- --client-cert-auth=true
 
 ```
+
+### Note
+
