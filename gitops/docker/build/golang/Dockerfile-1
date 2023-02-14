@@ -1,0 +1,9 @@
+
+# syntax=docker/dockerfile:1
+FROM golang:1.19
+WORKDIR /opt/app
+COPY . .
+ENV GOPROXY https://goproxy.cn,direct
+RUN go build -o example
+CMD ["/opt/app/example"]
+# 普通方式
