@@ -143,7 +143,7 @@ Login to the console with `admin/<password>`.
 ### Clean up
 
 ```sh
-cd ~/go/src/github.com/rook/cluster/examples/kubernetes/ceph
+cd ~/go/src/github.com/rook/deploy/examples
 kubectl delete -f csi/rbd/storageclass-test.yaml
 kubectl delete -f cluster-test.yaml
 kubectl delete -f crds.yaml -f common.yaml -f operator.yaml
