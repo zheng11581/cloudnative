@@ -58,6 +58,7 @@ kubectl get pvc -n gitlab-system
 kubectl get svc -n gitlab-system -l app=nginx-ingress
 ```
 
+## Login to GitLab
 ### Initial login
 
 ```shell 
@@ -69,4 +70,30 @@ cp ca.crt /usr/local/share/ca-certificates/
 update-ca-certificates 
 
 # 访问 https://gitlab.gitops.com
+```
+
+### But Invalid login or password.
+
+```shell
+# Wanna Change Password ?
+kubectl exec -it -n gitlab-system gitlab-toolbox-5479cb9f8f-tfjwd -- bash
+gitlab-rails console
+--------------------------------------------------------------------------------
+ Ruby:         ruby 2.7.7p221 (2022-11-24 revision 168ec2b1e5) [x86_64-linux]
+ GitLab:       15.8.1 (383efe57adf) FOSS
+ GitLab Shell: 14.15.0
+ PostgreSQL:   13.6
+------------------------------------------------------------[ booted in 11.16s ]
+Loading production environment (Rails 6.1.6.1)
+irb(main):001:0> u=User.where(id:1).first
+=> #<User id:1 @root>
+irb(main):008:0> u.password_confirmation='bFy0AsRDOFbI01NyWKZfyW6JIQiTEGvxRTcF4nNPjdbQb2Wa7mj42cBcfslNHSn4'
+=> "bFy0AsRDOFbI01NyWKZfyW6JIQiTEGvxRTcF4nNPjdbQb2Wa7mj42cBcfslNHSn4"
+irb(main):009:0> u.password='bFy0AsRDOFbI01NyWKZfyW6JIQiTEGvxRTcF4nNPjdbQb2Wa7mj42cBcfslNHSn4'
+=> "bFy0AsRDOFbI01NyWKZfyW6JIQiTEGvxRTcF4nNPjdbQb2Wa7mj42cBcfslNHSn4"
+irb(main):010:0> u.save
+=> true
+irb(main):011:0> exit
+
+# Now you can login
 ```
