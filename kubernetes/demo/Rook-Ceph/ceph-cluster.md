@@ -102,7 +102,7 @@ kubectl get po csi-rbdplugin-j4s6c -n rook-ceph -oyaml
 ### Create toolbox when required
 
 ```sh
-kubectl create -f cluster/examples/kubernetes/ceph/toolbox.yaml
+kubectl create -f toolbox.yaml
 ```
 
 ### Test networkstorage
