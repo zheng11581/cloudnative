@@ -1,9 +1,5 @@
 ## Prepare
 ### Prepare metallb
-```shell
-
-```
-
 ### Prepare self-signed certification
 ```shell
 openssl x509 -req -extfile ./cert/v3.ext -days 7300 -in ./cert/server.csr -CA ./cert/ca.crt -CAkey ./cert/ca.key -CAcreateserial -out ./cert/server.crt
@@ -38,7 +34,7 @@ helm upgrade --install gitlab gitlab/gitlab --create-namespace --namespace=gitla
   --set global.hosts.externalIP=192.68.3.101 \
   --set certmanager.install=false \
   --set global.ingress.configureCertmanager=false \
-  --set global.ingress.tls.secretName=gitops.com \
+  --set global.ingress.tls.secretName=gitops.com \ # 使用certnamager+self-signed 或者 certmanager+acme 生成证书
   --set postgresql.image.tag=13.6.0 \
   --set gitlab-runner.runners.privileged=true \
   --set nginx-ingress.defaultBackend.service.loadBalancerIP=192.68.3.101
