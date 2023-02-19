@@ -10,21 +10,12 @@ metadata:
 spec:
   selfSigned: {}
 EOF
-
-cat > selfsigned-cluster-issuer.yaml << EOF
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: selfsigned-cluster-issuer
-spec:
-  selfSigned: {}
-EOF
-
 ```
 
-### Bootstrapping CA Issuers
+### Bootstrapping CA `Issuers`
 
 ```shell
+# 方法1：certmanager 生成 ca 证书
 cat > selfsigned-ca-certificate.yaml << EOF
 # Issue a root Certificate
 # ca-example-com.certificate.cert-manager.yaml
@@ -36,8 +27,8 @@ metadata:
   namespace: cert-manager
 spec:
   secretName: selfsigned-ca-tls ### Secret名字
-  duration: 2160h # 90d
-  renewBefore: 360h # 15d
+  duration: 7300d
+  renewBefore: 3650d
   subject:
     organizations:
     - Example Inc. ###
@@ -45,7 +36,7 @@ spec:
   privateKey:
     algorithm: RSA
     encoding: PKCS1
-    size: 2048
+    size: 4096
 
   # Issuer references are always required.
   issuerRef:
@@ -57,6 +48,10 @@ spec:
     # if you are using an external issuer, change this to that issuer group.
     group: cert-manager.io
 EOF
+
+# 方法2：根据ca.key ca.crt生成 selfsigned-ca-tls
+kubectl -n cert-manager create secret tls selfsigned-ca-tls --key ca.key --cert ca.crt
+
 
 cat > selfsigned-ca-issuer.yaml << EOF
 apiVersion: cert-manager.io/v1
