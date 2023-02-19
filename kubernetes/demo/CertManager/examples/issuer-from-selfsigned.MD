@@ -49,9 +49,6 @@ spec:
     group: cert-manager.io
 EOF
 
-# 方法2：根据ca.key ca.crt生成 selfsigned-ca-tls
-kubectl -n cert-manager create secret tls selfsigned-ca-tls --key ca.key --cert ca.crt
-
 
 cat > selfsigned-ca-issuer.yaml << EOF
 apiVersion: cert-manager.io/v1
