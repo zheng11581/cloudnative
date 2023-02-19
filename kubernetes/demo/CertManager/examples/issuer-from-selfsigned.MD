@@ -15,7 +15,7 @@ EOF
 ### Bootstrapping CA `Issuers`
 
 ```shell
-# 方法1：certmanager 生成 ca 证书
+# 1. certmanager 生成 ca 证书
 cat > selfsigned-ca-certificate.yaml << EOF
 # Issue a root Certificate
 # ca-example-com.certificate.cert-manager.yaml
