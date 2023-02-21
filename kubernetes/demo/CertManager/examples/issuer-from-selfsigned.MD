@@ -27,8 +27,8 @@ metadata:
   namespace: cert-manager
 spec:
   secretName: selfsigned-ca-tls ### Secret名字
-  duration: 7300d
-  renewBefore: 3650d
+  duration: 2160h
+  renewBefore: 360h
   subject:
     organizations:
     - Example Inc. ###
@@ -37,7 +37,8 @@ spec:
     algorithm: RSA
     encoding: PKCS1
     size: 4096
-
+  dnsNames:
+  - ca.example.com
   # Issuer references are always required.
   issuerRef:
     name: selfsigned-issuer ### 指定为自签名发行人
@@ -91,6 +92,10 @@ spec:
   # At least one of a DNS Name, URI, or IP address is required.
   dnsNames:
   - gitlab.gitops.com
+  - kas.gitops.com
+  - minio.gitops.com
+  - registry.gitops.com
+  - habor.gitops.com
   # uris: ### 注释了uris、ipAddresses
   # - spiffe://cluster.local/ns/sandbox/sa/example
   # ipAddresses:
