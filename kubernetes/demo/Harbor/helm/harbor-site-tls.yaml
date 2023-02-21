@@ -1,0 +1,29 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: harbor-site
+  namespace: harbor
+spec:
+  secretName: harbor-site-tls ### Secret名字
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+
+  subject:
+    organizations:
+    - Example Inc.
+
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+
+  # At least one of a DNS Name, URI, or IP address is required.
+  dnsNames:
+  - habor.gitops.com
+  - notary.gitops.com
+
+  issuerRef:
+    name: selfsigned-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
