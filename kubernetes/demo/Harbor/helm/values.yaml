@@ -1,0 +1,32 @@
+
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: secret
+    secret:
+      # Need prepare two Secrets in Namspace harbor
+      secretName: "harbor-site-tls"
+      notarySecretName: "harbor-site-tls"
+  ingress:
+    hosts:
+      core: harbor.gitops.com
+      notary: notary.gitops.com
+    className: nginx
+persistence:
+  persistentVolumeClaim:
+    registry:
+      size: 20Gi
+    chartmuseum:
+      size: 10Gi
+    jobservice:
+      jobLog:
+        size: 10Gi
+      scanDataExports:
+        size: 10Gi
+    database:
+      size: 10Gi
+    redis:
+      size: 10Gi
+    trivy:
+      size: 10Gi
