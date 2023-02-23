@@ -12,7 +12,7 @@ expose:
     hosts:
       core: harbor.gitops.com
       notary: notary.gitops.com
-    className: gitlab-nginx
+    className: nginx
 persistence:
   persistentVolumeClaim:
     registry:
