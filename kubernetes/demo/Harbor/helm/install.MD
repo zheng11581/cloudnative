@@ -7,5 +7,5 @@ helm repo update
 
 kubectl apply -f harbor-site-tls.yaml
 
-helm install harbor harbor/harbor -f values.yaml --namespace harbor --create-namespace
+helm update harbor harbor/harbor -f values.yaml --namespace harbor --create-namespace
 ```
