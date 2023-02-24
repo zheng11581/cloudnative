@@ -13,6 +13,7 @@ expose:
       core: harbor.gitops.com
       notary: notary.gitops.com
     className: nginx
+externalURL: https://harbor.gitops.com:31137
 persistence:
   persistentVolumeClaim:
     registry:
