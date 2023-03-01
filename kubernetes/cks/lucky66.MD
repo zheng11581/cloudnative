@@ -198,8 +198,8 @@ find the Pod's manifest file at `/cks/9/pod9.yaml`. Ensure that the modified spe
 # automountServiceAccountToken: false
 
 # 2
-# kubectl -n qa run backend --image=nginx --dry-run=client -oyaml > /cks/9/pod9.yaml
-# vi /cks/9/pod9.yaml
+# kubectl -n qa run backend --image=nginx --dry-run=client -oyaml > /cks/5/5-pod.yaml
+# vi /cks/5/5-pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -218,7 +218,7 @@ spec:
   restartPolicy: Always
 status: {}
 
-# kubectl apply -f /cks/9/pod9.yaml
+# kubectl apply -f /cks/5/5-pod.yaml
 
 # 3
 # kubecel -n qa delete sa <not-backend-sa>
@@ -226,6 +226,41 @@ status: {}
 ### Note
 
 6. Pod 安全策略-PodSecurityPolicy
+
+### Task
+
+1. Create a new PodSecurityPolicy named prevent-psp-policy, which prevents the creation of privileged Pods.
+2. Create a new ClusterRole named restrict-access-role, which uses the newly created PodSecurityPolicy prevent-psp-policy
+3. Create a new serviceAccount named psp-denial-sa in the existing namespace development.
+4. Finally, create a new clusterRoleBinding named dany-access-bind, which binds the newly created ClusterRole restrict-access-role to the newly created serviceAccount psp-denial-sa.
+
+### Answer
+```shell
+# 0
+# vim /etc/kubernetes/manifests/kube-apiserver.yaml
+- --enable-admission-plugins=NodeRestriction,PodSecurityPolicy
+# systemctl restart kubelet
+
+# 1
+# vim /cks/6/6-psp.yaml
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata: 
+  name: prevent-psp-policy
+spec:
+  privileged: false #禁止容器的特权模式
+  seLinux:
+    rule: RunAsAny #设置 selinux 参数，不会校验
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny #设置运行容器的用户 ID
+  fsGroup:
+    rule: RunAsAny #设置组 ID
+  volumes:
+  - '*' #可以用任何 volume 卷
+# kubectl -f apply -f /cks/6/6-psp.yamlm bnmjjj
+```
 
 7. NetworkPolicy 拒绝所有入口流量
 
