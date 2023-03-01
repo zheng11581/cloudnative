@@ -20,24 +20,20 @@ helm repo update
 helm upgrade --install gitlab gitlab/gitlab --create-namespace --namespace=gitlab-system \
   --timeout 600s \
   --set global.edition=ce \
-  --set global.hosts.domain=gitops.com \
-  --set global.hosts.externalIP=192.68.3.101 \
+  --set global.hosts.domain=gitops.com:31137 \
   --set certmanager-issuer.email=me@gitops.com \
   --set postgresql.image.tag=13.6.0 \
-  --set gitlab-runner.runners.privileged=true \ 
-  --set nginx-ingress.defaultBackend.service.loadBalancerIP=192.68.3.101
+  --set gitlab-runner.runners.privileged=true 
 
 # 自签泛域名证书
 helm upgrade --install gitlab gitlab/gitlab --create-namespace --namespace=gitlab-system \
   --set global.edition=ce \
-  --set global.hosts.domain=gitops.com \
-  --set global.hosts.externalIP=192.68.3.101 \
+  --set global.hosts.domain=gitops.com:31137 \
   --set certmanager.install=false \
   --set global.ingress.configureCertmanager=false \
-  --set global.ingress.tls.secretName=gitops.com \ # 使用certnamager+self-signed 或者 certmanager+acme 生成证书
+  --set global.ingress.tls.secretName=gitlab-site-tls \
   --set postgresql.image.tag=13.6.0 \
-  --set gitlab-runner.runners.privileged=true \
-  --set nginx-ingress.defaultBackend.service.loadBalancerIP=192.68.3.101
+  --set gitlab-runner.runners.privileged=true
   
   ```
 
