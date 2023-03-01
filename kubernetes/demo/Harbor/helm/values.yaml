@@ -30,3 +30,4 @@ persistence:
       size: 10Gi
     trivy:
       size: 10Gi
+externalURL: https://harbor.gitops.com:31137 # Nginx ingress controller exposed by NodePort 31137 
