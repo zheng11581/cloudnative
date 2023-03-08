@@ -24,6 +24,8 @@ spec:
         containers:
         - name: etcd
           image: bitnami/etcd:3.4.13
+          securityContext:
+            runAsUser: root
           command:
           - sh
           - -c
