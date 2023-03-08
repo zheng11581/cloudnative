@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: etcd-bakup
 spec:
- schedule: "*/15 * * * *"
+ schedule: "* */1 * * *"
  successfulJobsHistoryLimit: 3
  failedJobsHistoryLimit: 5
  #activeDeadlineSenconds: 60
