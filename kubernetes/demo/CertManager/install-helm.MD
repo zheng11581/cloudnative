@@ -14,13 +14,14 @@ helm repo update
 ### 3. Install cert-manager with CRDs
 
 ```shell
+# Example: disabling prometheus using a Helm parameter
 helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
   --version v1.11.0 \
-  --set prometheus.enabled=false \   # Example: disabling prometheus using a Helm parameter
-  --set installCRDs=true             # Uncomment to also template CRDs
+  --set prometheus.enabled=false \
+  --set installCRDs=true
 
 
 helm template \

@@ -16,24 +16,17 @@ kubectl -n gitlab-system create secret tls gitops.com --key ./cert/server.key --
 helm repo add gitlab https://charts.gitlab.io/
 helm repo update
 
-# certmanger+letsencyipt
-helm upgrade --install gitlab gitlab/gitlab --create-namespace --namespace=gitlab-system \
-  --timeout 600s \
-  --set global.edition=ce \
-  --set global.hosts.domain=gitops.com:31137 \
-  --set certmanager-issuer.email=me@gitops.com \
-  --set postgresql.image.tag=13.6.0 \
-  --set gitlab-runner.runners.privileged=true 
-
 # 自签泛域名证书
 helm upgrade --install gitlab gitlab/gitlab --create-namespace --namespace=gitlab-system \
   --set global.edition=ce \
-  --set global.hosts.domain=gitops.com:31137 \
+  --set global.hosts.domain=gitops.com \
   --set certmanager.install=false \
+  --set global.ingress.class=gitlab-nginx \
   --set global.ingress.configureCertmanager=false \
   --set global.ingress.tls.secretName=gitlab-site-tls \
   --set postgresql.image.tag=13.6.0 \
-  --set gitlab-runner.runners.privileged=true
+  --set gitlab-runner.runners.privileged=true \
+  --set gitlab-runner.install=false
   
   ```
 
