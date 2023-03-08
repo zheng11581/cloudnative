@@ -23,7 +23,7 @@ spec:
                       operator: Exists
         containers:
         - name: etcd
-          image: etcd:3.4.13
+          image: bitnami/etcd:3.4.13
           command:
           - sh
           - -c
