@@ -25,7 +25,7 @@ spec:
         - name: etcd
           image: bitnami/etcd:3.4.13
           securityContext:
-            runAsUser: root
+            runAsUser: 0
           command:
           - sh
           - -c
