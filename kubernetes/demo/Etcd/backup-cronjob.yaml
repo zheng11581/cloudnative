@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: etcd-bakup
@@ -19,10 +19,8 @@ spec:
             requiredDuringSchedulingIgnoredDuringExecution:
                   nodeSelectorTerms:
                   - matchExpressions:
-                    - key: kubernetes.io/role
-                      operator: In
-                      values:
-                      - master
+                    - key: node-role.kubernetes.io/master
+                      operator: Exists
         containers:
         - name: etcd
           image: etcd:3.4.13
