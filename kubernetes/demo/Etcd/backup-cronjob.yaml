@@ -1,0 +1,60 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: etcd-bakup
+spec:
+ schedule: "*/15 * * * *"
+ successfulJobsHistoryLimit: 3
+ failedJobsHistoryLimit: 5
+ #activeDeadlineSenconds: 60
+ jobTemplate:
+  spec:
+    template:
+      metadata:
+       labels:
+        app: etcd-bakup
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: kubernetes.io/role
+                      operator: In
+                      values:
+                      - master
+        containers:
+        - name: etcd
+          image: etcd:3.4.13
+          command:
+          - sh
+          - -c
+          - "export ETCDCTL_API=3; \
+             etcdctl --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
+             --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+             --key=/etc/kubernetes/pki/etcd/healthcheck-client.key \
+             --endpoints $ENDPOINT snapshot save /tmp/$(date +%Y%m%d_%H%M%S)_snapshot.db; \
+             echo etcd backup sucess;"
+          env:
+          - name: ENDPOINT
+            value: "127.0.0.1:2379"
+          volumeMounts:
+            - mountPath: "/tmp"
+              name: snapshot
+        #      subPath: data/etcd-snapshot
+            - mountPath: /etc/localtime
+              name: lt-config
+            - mountPath: /etc/kubernetes/pki/etcd
+              name: etcd-secret
+        restartPolicy: OnFailure
+        volumes:
+          - name: snapshot
+            hostPath:
+              path: /data
+          - name: lt-config
+            hostPath:
+              path: /etc/localtime
+          - name: etcd-secret
+            hostPath:
+              path: /etc/kubernetes/pki/etcd
+        hostNetwork: true
