@@ -44,6 +44,23 @@
 # git clone git@github.com:kubernetes/kubernetes.git
 # cd kubernetes
 # git checkout -b my-v1.26.2 v1.26.2
+# vi hack/lib/golang.sh
+    # 注释
+    #if [[ "${DBG:-}" == 1 ]]; then
+    #    # Debugging - disable optimizations and inlining and trimPath
+    #    gogcflags="${GOGCFLAGS:-} all=-N -l"
+    #    goasmflags=""
+    #fi
+    # 新增
+    gogcflags="${GOGCFLAGS:-} all=-N -l"
+
+    goldflags="all=$(kube::version::ldflags) ${GOLDFLAGS:-}"
+    # 注释
+    #if [[ "${DBG:-}" != 1 ]]; then
+    #    # Not debugging - disable symbols and DWARF.
+    #    goldflags="${goldflags} -s -w"
+    #fi
+
 # make all GOFLAGS=-v GOGCFLAGS="-N -l"
 # ./hack/local-up-cluster.sh -O
 
@@ -51,5 +68,14 @@
 # cluster/kubectl.sh config set-cluster local --server=https://localhost:6443 --certificate-authority=/var/run/kubernetes/server-ca.crt
 # source /etc/profile.d/kubernetes.sh 
 # kubectl.sh get node
+
+```
+
+## Debug Kubernetes
+
+### Install go-delve
+
+```shell
+# go install github.com/go-delve/delve/cmd/dlv@latest
 
 ```
