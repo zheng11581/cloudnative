@@ -126,7 +126,7 @@ authorization:
 ## 3. Trivy 进行镜像扫描
 
 ### Task
-1. Use the Trivy open-source container scanner to detect images with severe vulnerabilities used by Pods in the namespace yavin.
+1. Use the Trivy open-source container scanner to detect images with severe vulnerabilities used by Pods in the namespace `yavin`.
 2. Look for images with High or Critical severity vulnerabilities,and delete the Pods that use those images.
 
 Trivy is pre-installed on the cluster's master node only; it is not available on the base system or the worker nodes. You'll have to connect to the cluster's master node to use Trivy.
