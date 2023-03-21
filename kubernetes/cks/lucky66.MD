@@ -264,18 +264,307 @@ spec:
 
 7. NetworkPolicy 拒绝所有入口流量
 
+### Task
+
+1. Create a new default-deny NetworkPolicy named `denynetwork` in the namespace `development` for all traffic of type Ingress.
+2. The new NetworkPolicy must deny all lngress traffic in the namespace `development`.
+3. Apply the newly created default-deny NetworkPolicy to all Pods running in namespace development.
+
+### Answer
+```shell
+cat /cks/7/7-networkpolicy.yaml <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: denynetwork
+  namespace: development
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingres
+EOF
+```
+
 8. NetworkPolicy
+
+### Task
+
+1. create a NetworkPolicy named `pod-access` to restrict access to Pod `products-service` running in namespace `development`.
+2. only allow the following Pods to connect to Pod `products-service`:
+    - Pods in the namespace `testing`
+    - Pods with label `environment: staging`, in any namespace
+3. Make sure to apply the NetworkPolicy.
+You can find a skelet on manifest file at /cks/8/8-networkpolicy.yaml
+
+### Answer
+```shell
+cat > /cks/8/8-networkpolicy.yaml <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pod-access
+  namespace: development
+spec:
+  podSelector:
+    matchLabels:
+      run: products-service
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: testing
+    - podSelector:
+        matchLabels:
+          environment: staging
+EOF
+```
+
 
 9.  RBAC/clusterrole
 
+### Task
+A Role bound to a Pod's serviceAccount grants overly permissive permissions. Complete the following tasks to reduce the set of permissions.
+
+1. Given an existing Pod named `web-pod` running in the namespace `monitoring`. 
+2. Edit the existing Role bound to the Pod's serviceAccount `sa-1` to only allow performing `list` operations, only on resources of type `Endpoints`.
+3. Create a new Role named `role-2` in the namespace `monitoring`, which only allows performing，`update` operations, only on resources of type `persistentvolumeclaims`.
+4. Create a new RoleBinding named `role-2-binding` binding the newly created Role to the Pod's serviceAccount.
+Don't delete the existing RoleBinding.
+
+```shell
+# 1 & 2 find the RoleBinding with ServiceAccount sa-1 and edit the Role with list operations on Endpoints
+kubectl get rolebindings.rbac.authorization.k8s.io -n monitoring |grep sa-1
+
+# 3 
+cat > /cks/9/9-role.yaml <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: monitoring
+  name: role-2
+rules:
+- apiGroups: [""] 
+  resources: ["persistentvolumeclaims"]
+  verbs: ["update"]
+EOF
+
+# 4 
+cat > /cks/9/9-rolebinding.yaml <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: role-2-binding
+  namespace: monitoring
+subjects:
+- kind: ServiceAccount
+  name: monitoring:sa-1
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role 
+  name: role-2
+  apiGroup: rbac.authorization.k8s.io
+EOF
+```
+
 10. kube-apiserver 审计日志记录和采集
+
+### Task
+1. Enable audit logs in the cluster.
+To do so, enable the log backend, and ensure that:
+- logs are stored at /var/log/kubernetes/audit-logs.txt
+- log files are retained for 5 days
+- at maximum, a number of 10 auditlog files are retained
+
+2. A basic policy is provided at /etc/kubernetes/logpolicy/sample-policy.yaml. it only specifies what not to do.
+The base policy is located on the cluster's master node.
+Edit and extend the basic policy to log:
+- `namespaces` changes at RequestResponse level
+- the request body of `pods` changes in the namespace `front-apps`
+- `configMap` and `secret` changes in all namespaces at the Metadata level
+- Also, add a catch all rule to log all other requests at the Metadata level.
+Don't forget to apply the modifiedpolicy
+
+```shell
+# 1 Edit kube-apiserver.yaml
+--audit-policy-file=/etc/kubernetes/logpolicy/sample-policy.yaml
+--audit-log-path=/var/log/kubernetes/audit-logs.txt
+--audit-log-maxage=5
+--audit-log-maxbackup=10
+
+# 2 Edit /etc/kubernetes/logpolicy/sample-policy.yaml
+
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+- level: RequestResponse
+  resources:
+  - group: ""
+    resources: ["namespaces"]
+
+- level: Request
+  resources:
+  - group: "" 
+    resources: ["pods"]
+    namespaces: ["front-apps"]
+
+- level: Metadata
+  resources:
+  - group: ""
+    resources: ["secrets", "configmaps"]
+
+- level: Metadata
+  omitStages:
+  - "RequestReceived"
+
+```
+
 
 11. 创建 Secret
 
+### Task
+1. Retrieve the content of the existing secret named `db1-secret-test` in the `istio-system` namespace. store the `username` field in a file named `/cks/11/old-username.txt` , and the `password` field in a file named `/cks/11/old-pass.txt`. You must create both files; they don't exist yet.
+2. Do not modify the created files in the following steps, create new temporary files if needed.
+- Create a new secret named `test` in the `istio-system` namespace, with the following
+content:
+ username : thanos
+ password : hahahaha
+3. Finally, create a new Pod that has access to the secret `test` via a volume:
+pod name | dev-pod
+namespace | istio-system
+container name | dev-container
+image | nginx:1.9
+volume name | dev-volume
+mount path | /etc/test-secret
+
+```shell
+# 1 
+# kubectl create secret generic db1-secret-test --from-file=username=/cks/11/old-username.txt --from-file=password=/cks/11/old-pass.txt -n istio-system
+kubectl get secrets -n istio-system db1-secret-test -ojsonpath={.data.password} |base64 -d > /cks/11/old-pass.txt
+kubectl get secrets -n istio-system db1-secret-test -ojsonpath={.data.username} |base64 -d > /cks/11/old-username.txt
+
+# 2
+kubectl create secret generic test --from-literal=username=thanos --from-literal=password=hahahaha -n istio-system --dry-run=client -oyaml > /cks/11/11-secret.yaml
+kubect; apply -f /cks/11/11-secret.yaml
+
+# 3 
+kubectl run dev-pod -n istio-system --image=nginx:1.9 --dry-run=client -oyaml > /cks/11/11-pod.yaml
+# Edit /cks/11/11-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: dev-pod
+  name: dev-pod
+  namespace: istio-system
+spec:
+  volumes:
+  - name: dev-volume
+    secret:
+      secretName: test
+  containers:
+  - image: nginx:1.9
+    name: dev-container
+    volumeMounts:
+    - name: dev-volume
+      readOnly: true
+      mountPath: "/etc/test-secret"
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+# Apply /cks/11/11-pod.yaml
+kubectl apply -f /cks/11/11-pod.yaml
+```
+
+
 12. dockerfile 和 deployment 优化部分
+
+### Task
+1. Analyze and edit the given Dockerfile (based on the ubuntu:16.04 image) `/cks/12/Dockerfile` fixing `two instructions` present in the file being prominent security/best-practice issues.
+2. Analyze and edit the given manifest file `/cks/12/deployment.yaml` fixing `two fields` present in the file being prominent security/best-practice issues.
+
+```shell
+# 1 
+# vim /cks/12/Dockerfile
+# FROM ubuntu:latest
+FROM ubuntu:16.04 #把 latest 变成 16.04
+# USER root 
+USER nobody #把 USER ROOT 变成 USER nobody
+
+# 2  
+# vim /cks/12/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+labels:
+app: dev
+name: dev
+spec:
+replicas: 1
+selector:
+matchLabels:
+app: dev
+template:
+ metadata:
+ labels:
+ app: dev
+ spec:
+ containers:
+ - image: mysql
+ name: mysql
+ securityContext: {'capabilities':{'add':['NET_ADMIN'],'drop':['all']},'privileged': False,'readOnlyRootFilesystem': True, 'runAsUser': 65535}
+# 'privileged'变成 false，readOnlyRootFilesystem’变成 True
+```
 
 13. 镜像安全 ImagePolicyWebhook
 
+### Task
+You have to complete the entire task on the cluster's master node, where all services and files have been prepared and placed.
+Given an incomplete configuration in directory `/etc/kubernetes/config` and a functional container image scanner with HTTPS endpoint `https://localhost:8081/image_policy`
+
+- Enable the necessary plugins to create an image policy
+- validate the control configuration and change it to an `implicit deny`
+- Edit the configuration to point the provided HTTPS endpoint correctly
+
+Finally , test if the configuration is working by trying to deploy the vulnerable resource /cks/1/web1.yaml
+You can find the container image scanner's log file at /var/loglimagepolicyiacme.log
+
+```shell
+--enable-admission-plugins
+--admission-control-config-file
+/etc/kubernetes/config/imagepolicyconfig.yaml
+kubeConfigFile
+```
+
+
 14. 删除非无状态或非不可变的 pod
 
+
+
 15. gVsior/runtimeclass
+
+### Task
+1. Create a RuntimeClass named `untrusted` using the prepared runtime handler named `runsc`.
+2. Update all Pods in the namespace `client` to run on gvisor, unless they are already running on anon-default runtime handler.
+You can find a skeleton manifest file at `/cks/15/rc.yaml`
+
+```shell
+# 1
+cat > /cks/15/rc.yaml <<EOF
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: untrusted
+handler: runsc
+EOF
+
+# 2
+kubectl get pod -n client -oyaml > /cks/15/pods.yaml
+cp /cks/15/pods.yaml /cks/15/runsc-pods.yaml
+# Edit /cks/15/runsc-pods.yaml 
+runtimeClassName: untrusted
+kubectl delete -f /cks/15/runsc-pods.yaml
+kubectl create -f /cks/15/runsc-pods.yaml
+```
