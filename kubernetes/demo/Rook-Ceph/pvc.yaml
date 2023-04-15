@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: rook-ceph
+  name: ceph-pvc
 spec:
   storageClassName: rook-ceph-block
   accessModes:

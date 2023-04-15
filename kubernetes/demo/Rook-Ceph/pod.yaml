@@ -6,7 +6,7 @@ spec:
   volumes:
     - name: ceph-pv-storage
       persistentVolumeClaim:
-        claimName: rook-ceph
+        claimName: ceph-pvc
   containers:
     - name: ceph-pv-container
       image: nginx
